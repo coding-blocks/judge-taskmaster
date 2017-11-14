@@ -1,0 +1,46 @@
+{
+  "name": "judge-taskmaster",
+  "version": "0.0.1",
+  "description": "Coding Blocks worker-runner ",
+  "main": "dist/run.js",
+  "author": "Arnav Gupta <a@cb.lk>",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/amqplib": "^0.5.4",
+    "@types/chai": "^4.0.4",
+    "@types/mocha": "^2.2.44",
+    "@types/shelljs": "^0.7.6",
+    "ts-node": "^3.3.0",
+    "typescript": "^2.6.1"
+  },
+  "dependencies": {
+    "amqplib": "^0.5.2",
+    "chai": "^4.1.2",
+    "mocha": "^4.0.1",
+    "nyc": "^11.3.0",
+    "shelljs": "^0.7.8"
+  },
+  "nyc": {
+    "extension": [
+      ".ts",
+      ".js"
+    ],
+    "reporter": [
+      "html",
+      "lcov"
+    ],
+    "sourceMap": true
+  },
+  "scripts": {
+    "build": "tsc",
+    "prestart": "npm run build",
+    "start": "node dist/taskmaster.js",
+    "test": "mocha --exit --require ts-node/register test/**/*.ts",
+    "cover": "nyc npm test"
+  },
+  "engines": {
+    "node": "8",
+    "npm": "5",
+    "yarn": "1"
+  }
+}
