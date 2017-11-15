@@ -7,32 +7,39 @@ import * as fs from 'fs'
 rm('-rf', config.RUNBOX.DIR)
 mkdir('-p', config.RUNBOX.DIR)
 
-function execRun (job: RunJob): RunResult {
+function execRun (job: RunJob, executed: (result: RunResult) => void) {
   let currentJobDir = path.join(config.RUNBOX.DIR, job.id.toString())
   mkdir('-p', currentJobDir)
+  const LANG_CONFIG = config.LANGS[job.lang]
 
-  fs.writeFileSync(path.join(currentJobDir, 'source.c'), (new Buffer(job.source, 'base64')).toString('ascii'))
-  fs.writeFileSync(path.join(currentJobDir, 'run.stdin'), (new Buffer(job.stdin, 'base64')).toString('ascii'))
+  fs.writeFileSync(path.join(currentJobDir, LANG_CONFIG.SOURCE_FILE),
+    (new Buffer(job.source, 'base64')).toString('ascii'))
+  fs.writeFileSync(path.join(currentJobDir, 'run.stdin'),
+    (new Buffer(job.stdin, 'base64')).toString('ascii'))
 
   exec(`docker run \\
-    --cpus="0.5" \\
-    --memory="20m" \\
+    --cpus="${LANG_CONFIG.CPU_SHARE}" \\
+    --memory="${LANG_CONFIG.MEM_LIMIT}" \\
     --ulimit nofile=64:64 \\
     --rm \\
     --read-only \\
     -v "${currentJobDir}":/usr/src/runbox \\
     -w /usr/src/runbox \\
-    codingblocks/judge-worker-c \\
+    codingblocks/judge-worker-${job.lang} \\
     bash -c "/bin/compile.sh && /bin/run.sh"
   `)
-  let stdout = cat(path.join(currentJobDir, 'run.stdout'))
-  let stderr = cat(path.join(currentJobDir, 'run.stderr'))
+  let compile_stderr = cat(path.join(currentJobDir, 'compile.stderr'))
 
-  return {
+  let stdout = cat(path.join(currentJobDir, 'run.stdout'))
+  let stderr = compile_stderr || (path.join(currentJobDir, 'run.stderr'))
+
+  executed({
     id: job.id,
     stderr: (new Buffer(stderr)).toString('base64'),
     stdout: (new Buffer(stdout)).toString('base64')
-  }
+  })
+
+  rm('-rf', currentJobDir)
 }
 
 export {

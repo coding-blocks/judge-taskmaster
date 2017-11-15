@@ -12,13 +12,14 @@ amqp.connect('amqp://localhost', (err, connection) => {
         channel.assertQueue(jobQ);
         channel.consume(jobQ, (msg) => {
             let job = JSON.parse(msg.content.toString());
-            let jobResult = run_1.execRun(job);
-            channel.sendToQueue(successQ, (new Buffer(JSON.stringify({
-                id: job.id,
-                stderr: 'stderr',
-                stdout: 'stdout'
-            }))));
-            channel.ack(msg);
+            run_1.execRun(job, (jobResult) => {
+                channel.sendToQueue(successQ, (new Buffer(JSON.stringify({
+                    id: job.id,
+                    stderr: 'stderr',
+                    stdout: 'stdout'
+                }))));
+                channel.ack(msg);
+            });
         });
     });
 });

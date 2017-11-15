@@ -10,14 +10,14 @@
     "@types/chai": "^4.0.4",
     "@types/mocha": "^2.2.44",
     "@types/shelljs": "^0.7.6",
+    "chai": "^4.1.2",
+    "mocha": "^4.0.1",
+    "nyc": "^11.3.0",
     "ts-node": "^3.3.0",
     "typescript": "^2.6.1"
   },
   "dependencies": {
     "amqplib": "^0.5.2",
-    "chai": "^4.1.2",
-    "mocha": "^4.0.1",
-    "nyc": "^11.3.0",
     "shelljs": "^0.7.8"
   },
   "nyc": {
@@ -35,7 +35,7 @@
     "build": "tsc",
     "prestart": "npm run build",
     "start": "node dist/taskmaster.js",
-    "test": "mocha --exit --require ts-node/register test/**/*.ts",
+    "test": "mocha --timeout 10000 --exit --require ts-node/register test/**/*.ts",
     "cover": "nyc npm test"
   },
   "engines": {
