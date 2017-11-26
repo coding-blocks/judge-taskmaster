@@ -1,5 +1,7 @@
 exports = module.exports = {
   AMQP: {
+    USER: process.env.AMQP_USER || 'codingblocks',
+    PASS: process.env.AMQP_PASS || 'codingblocks',
     HOST: process.env.AMQP_HOST || "localhost",
     PORT: process.env.AMQP_PORT || "5672"
   },

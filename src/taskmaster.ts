@@ -7,7 +7,8 @@ import config = require('../config.js')
 let jobQ = 'job_queue'
 let successQ = 'success_queue'
 
-amqp.connect(`amqp://${config.AMQP.HOST}:${config.AMQP.PORT}`, (err, connection: Connection) => {
+// Connect to amqp://user:pass@host:port/
+amqp.connect(`amqp://${config.AMQP.USER}@${config.AMQP.PASS}:${config.AMQP.HOST}:${config.AMQP.PORT}`, (err, connection: Connection) => {
   if (err) throw err
 
   connection.createChannel((err2, channel) => {
