@@ -2,11 +2,12 @@ import * as amqp from 'amqplib/callback_api'
 import {Connection} from 'amqplib/callback_api'
 import {RunJob, RunResult} from './types/job'
 import {execRun} from './tasks/run'
+import config = require('../config.js')
 
 let jobQ = 'job_queue'
 let successQ = 'success_queue'
 
-amqp.connect('amqp://localhost', (err, connection: Connection) => {
+amqp.connect(`amqp://${config.AMQP.HOST}:${config.AMQP.PORT}`, (err, connection: Connection) => {
   if (err) throw err
 
   connection.createChannel((err2, channel) => {

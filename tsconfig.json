@@ -3,11 +3,10 @@
     "module": "commonjs",
     "target": "es2015",
     "moduleResolution": "node",
-    "allowJs": true,
     "allowSyntheticDefaultImports": true,
     "sourceMap": true,
     "sourceRoot": ".",
-    "baseUrl": "src",
+    "rootDir": "src",
     "outDir": "dist"
   },
   "include": [
