@@ -34,7 +34,7 @@
   "scripts": {
     "build": "tsc",
     "prestart": "npm run build",
-    "start": "./wait-for-it.sh $AMQP_HOST:$AMQP_PORT -- node dist/taskmaster.js",
+    "start": "./wait-for-it.sh ${AMQP_HOST}:${AMQP_PORT} -- node dist/taskmaster.js",
     "test": "mocha --timeout 10000 --exit --require ts-node/register test/**/*.ts",
     "cover": "nyc npm test"
   },

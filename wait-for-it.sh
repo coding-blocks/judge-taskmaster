@@ -1,177 +1,73 @@
-#!/usr/bin/env bash
-#   Use this script to test if a given TCP host/port are available
+#!/bin/sh
+# shellcheck shell=dash
 
-cmdname=$(basename $0)
+#
+# Waits for the given host(s) to be available via TCP before executing a given
+# command.
+#
+# Usage: ./wait.sh [-t timeout] host:port [host:port] [...] [-- command args...]
+#
+# It accepts a number of `host:port` combinations to connect to via netcat.
+# The command to execute after each host is reachable can be supplied after the
+# `--` argument.
+# The default timeout of 10 seconds can be changed via `-t timeout` argument.
+#
+# Copyright 2016, Sebastian Tschan
+# https://blueimp.net
+#
+# Licensed under the MIT license:
+# https://opensource.org/licenses/MIT
+#
 
-echoerr() { if [[ $QUIET -ne 1 ]]; then echo "$@" 1>&2; fi }
+set -e
 
-usage()
-{
-    cat << USAGE >&2
-Usage:
-    $cmdname host:port [-s] [-t timeout] [-- command args]
-    -h HOST | --host=HOST       Host or IP under test
-    -p PORT | --port=PORT       TCP port under test
-                                Alternatively, you specify the host and port as host:port
-    -s | --strict               Only execute subcommand if the test succeeds
-    -q | --quiet                Don't output any status messages
-    -t TIMEOUT | --timeout=TIMEOUT
-                                Timeout in seconds, zero for no timeout
-    -- COMMAND ARGS             Execute command with args after the test finishes
-USAGE
-    exit 1
+TIMEOUT=10
+
+is_integer() {
+  test "$1" -eq "$1" 2> /dev/null
 }
 
-wait_for()
-{
-    if [[ $TIMEOUT -gt 0 ]]; then
-        echoerr "$cmdname: waiting $TIMEOUT seconds for $HOST:$PORT"
-    else
-        echoerr "$cmdname: waiting for $HOST:$PORT without a timeout"
-    fi
-    start_ts=$(date +%s)
-    while :
-    do
-        if [[ $ISBUSY -eq 1 ]]; then
-            nc -z $HOST $PORT
-            result=$?
-        else
-            (echo > /dev/tcp/$HOST/$PORT) >/dev/null 2>&1
-            result=$?
-        fi
-        if [[ $result -eq 0 ]]; then
-            end_ts=$(date +%s)
-            echoerr "$cmdname: $HOST:$PORT is available after $((end_ts - start_ts)) seconds"
-            break
-        fi
-        sleep 1
-    done
-    return $result
+connect_to_service() {
+  nc -w 1 -z "$1" "$2"
 }
 
-wait_for_wrapper()
-{
-    # In order to support SIGINT during timeout: http://unix.stackexchange.com/a/57692
-    if [[ $QUIET -eq 1 ]]; then
-        timeout $BUSYTIMEFLAG $TIMEOUT $0 --quiet --child --host=$HOST --port=$PORT --timeout=$TIMEOUT &
-    else
-        timeout $BUSYTIMEFLAG $TIMEOUT $0 --child --host=$HOST --port=$PORT --timeout=$TIMEOUT &
+wait_for_service() {
+  local host="${1%:*}"
+  local port="${1#*:}"
+  local output
+  if ! is_integer "$port"; then
+    printf 'Error: "%s" is not a valid host:port combination.\n' "$1" >&2
+    return 1
+  fi
+  printf 'Waiting for %s to become available ... ' "$1" >&2
+  # shellcheck disable=SC2155
+  local timeout=$(($(date +%s)+TIMEOUT))
+  while ! output="$(connect_to_service "$host" "$port" 2>&1)"; do
+    if [ "$(date +%s)" -gt "$timeout" ]; then
+      echo 'timeout' >&2
+      if [ ! -z "$output" ]; then
+        echo "$output" >&2
+      fi
+      return 1
     fi
-    PID=$!
-    trap "kill -INT -$PID" INT
-    wait $PID
-    RESULT=$?
-    if [[ $RESULT -ne 0 ]]; then
-        echoerr "$cmdname: timeout occurred after waiting $TIMEOUT seconds for $HOST:$PORT"
-    fi
-    return $RESULT
+    sleep 1
+  done
+  echo 'done' >&2
 }
 
-# process arguments
-while [[ $# -gt 0 ]]
-do
-    case "$1" in
-        *:* )
-        hostport=(${1//:/ })
-        HOST=${hostport[0]}
-        PORT=${hostport[1]}
-        shift 1
-        ;;
-        --child)
-        CHILD=1
-        shift 1
-        ;;
-        -q | --quiet)
-        QUIET=1
-        shift 1
-        ;;
-        -s | --strict)
-        STRICT=1
-        shift 1
-        ;;
-        -h)
-        HOST="$2"
-        if [[ $HOST == "" ]]; then break; fi
-        shift 2
-        ;;
-        --host=*)
-        HOST="${1#*=}"
-        shift 1
-        ;;
-        -p)
-        PORT="$2"
-        if [[ $PORT == "" ]]; then break; fi
-        shift 2
-        ;;
-        --port=*)
-        PORT="${1#*=}"
-        shift 1
-        ;;
-        -t)
-        TIMEOUT="$2"
-        if [[ $TIMEOUT == "" ]]; then break; fi
-        shift 2
-        ;;
-        --timeout=*)
-        TIMEOUT="${1#*=}"
-        shift 1
-        ;;
-        --)
-        shift
-        CLI=("$@")
-        break
-        ;;
-        --help)
-        usage
-        ;;
-        *)
-        echoerr "Unknown argument: $1"
-        usage
-        ;;
-    esac
+while [ $# != 0 ]; do
+  if [ "$1" = '-t' ] || [ "$1" = '--timeout' ]; then
+    if ! is_integer "$2"; then
+      printf 'Error: "%s" is not a timeout integer.\n' "$2" >&2
+      exit 1
+    fi
+    TIMEOUT="$2"
+    shift 2
+  fi
+  if [ "$1" = '--' ]; then
+    shift
+    exec "$@"
+  fi
+  wait_for_service "$1"
+  shift
 done
-
-if [[ "$HOST" == "" || "$PORT" == "" ]]; then
-    echoerr "Error: you need to provide a host and port to test."
-    usage
-fi
-
-TIMEOUT=${TIMEOUT:-15}
-STRICT=${STRICT:-0}
-CHILD=${CHILD:-0}
-QUIET=${QUIET:-0}
-
-# check to see if timeout is from busybox?
-# check to see if timeout is from busybox?
-TIMEOUT_PATH=$(realpath $(which timeout))
-if [[ $TIMEOUT_PATH =~ "busybox" ]]; then
-        ISBUSY=1
-        BUSYTIMEFLAG="-t"
-else
-        ISBUSY=0
-        BUSYTIMEFLAG=""
-fi
-
-if [[ $CHILD -gt 0 ]]; then
-    wait_for
-    RESULT=$?
-    exit $RESULT
-else
-    if [[ $TIMEOUT -gt 0 ]]; then
-        wait_for_wrapper
-        RESULT=$?
-    else
-        wait_for
-        RESULT=$?
-    fi
-fi
-
-if [[ $CLI != "" ]]; then
-    if [[ $RESULT -ne 0 && $STRICT -eq 1 ]]; then
-        echoerr "$cmdname: strict mode, refusing to execute subprocess"
-        exit $RESULT
-    fi
-    exec "${CLI[@]}"
-else
-    exit $RESULT
-fi
