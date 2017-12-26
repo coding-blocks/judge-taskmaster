@@ -23,6 +23,16 @@ exports = module.exports = {
       SOURCE_FILE: 'source.c',
       CPU_SHARE: "0.5",
       MEM_LIMIT: '20m'
+    },
+    'py2': {
+      SOURCE_FILE: 'source.py',
+      CPU_SHARE: "0.5",
+      MEM_LIMIT: '20m'
+    },
+    'nodejs6': {
+      SOURCE_FILE: 'source.js',
+      CPU_SHARE: "0.5",
+      MEM_LIMIT: '20m'
     }
   }
 }
