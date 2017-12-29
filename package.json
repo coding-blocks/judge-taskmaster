@@ -1,6 +1,6 @@
 {
   "name": "judge-taskmaster",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Coding Blocks worker-runner ",
   "main": "dist/run.js",
   "author": "Arnav Gupta <a@cb.lk>",
