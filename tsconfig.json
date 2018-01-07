@@ -6,7 +6,7 @@
     "allowSyntheticDefaultImports": true,
     "sourceMap": true,
     "sourceRoot": ".",
-    "rootDir": "src",
+    "baseUrl": "src",
     "outDir": "dist"
   },
   "include": [

@@ -1,0 +1,14 @@
+group: travis_latest
+sudo: required
+node_js:
+ - "8"
+
+before_install:
+  - sudo apt-get update
+  - sudo apt-get install -o Dpkg::Options::="--force-confold" --force-yes -y docker-ce
+
+install:
+  - npm install -D
+
+script:
+  - npm run test
