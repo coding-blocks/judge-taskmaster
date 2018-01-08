@@ -14,4 +14,7 @@ install:
   - docker pull codingblocks/judge-worker-cpp
 
 script:
-  - npm run test
+  - npm run cover
+
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
