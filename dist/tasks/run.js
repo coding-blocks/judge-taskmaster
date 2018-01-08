@@ -23,9 +23,10 @@ function execRun(job, executed) {
     codingblocks/judge-worker-${job.lang} \\
     bash -c "/bin/compile.sh && /bin/run.sh"
   `);
-    let compile_stderr = shelljs_1.cat(path.join(currentJobDir, 'compile.stderr'));
-    let stdout = shelljs_1.cat(path.join(currentJobDir, 'run.stdout'));
-    let stderr = compile_stderr || (path.join(currentJobDir, 'run.stderr'));
+    let stdout = shelljs_1.cat(path.join(currentJobDir, 'run.stdout')).toString();
+    // Check for compile_stderr if no stdout found
+    let compile_stderr = stdout ? '' : shelljs_1.cat(path.join(currentJobDir, 'compile.stderr'));
+    let stderr = compile_stderr || (path.join(currentJobDir, 'run.stderr')).toString();
     executed({
         id: job.id,
         stderr: (new Buffer(stderr)).toString('base64'),

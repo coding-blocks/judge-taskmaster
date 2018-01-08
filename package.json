@@ -12,6 +12,7 @@
     "@types/shelljs": "^0.7.6",
     "chai": "^4.1.2",
     "mocha": "^4.0.1",
+    "mocha-parallel-tests": "^1.2.10",
     "nyc": "^11.3.0",
     "ts-node": "^3.3.0",
     "typescript": "^2.6.1"
@@ -36,6 +37,7 @@
     "prestart": "npm run build",
     "start": "./wait-for-it.sh ${AMQP_HOST}:${AMQP_PORT} -- node dist/taskmaster.js",
     "test": "mocha --timeout 10000 --exit --require ts-node/register test/**/*.ts",
+    "test.parallel": "mocha-parallel-tests --timeout 10000 --exit --require ts-node/register test/**/*.ts",
     "cover": "nyc npm test"
   },
   "engines": {

@@ -28,10 +28,12 @@ function execRun (job: RunJob, executed: (result: RunResult) => void) {
     codingblocks/judge-worker-${job.lang} \\
     bash -c "/bin/compile.sh && /bin/run.sh"
   `)
-  let compile_stderr = cat(path.join(currentJobDir, 'compile.stderr'))
 
-  let stdout = cat(path.join(currentJobDir, 'run.stdout'))
-  let stderr = compile_stderr || (path.join(currentJobDir, 'run.stderr'))
+  let stdout = cat(path.join(currentJobDir, 'run.stdout')).toString()
+
+  // Check for compile_stderr if no stdout found
+  let compile_stderr = stdout ? '' : cat(path.join(currentJobDir, 'compile.stderr'))
+  let stderr = compile_stderr || (path.join(currentJobDir, 'run.stderr')).toString()
 
   executed({
     id: job.id,

@@ -4,6 +4,9 @@
 
 ### 0.1.0
 
+#### 0.0.4
+ - test all possible languages
+
 #### 0.0.2
  - fix the jobResult contents in executed callback
 

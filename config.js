@@ -25,12 +25,17 @@ exports = module.exports = {
       MEM_LIMIT: '100m'
     },
     'py2': {
-      SOURCE_FILE: 'source.py',
+      SOURCE_FILE: 'script.py',
       CPU_SHARE: "0.8",
       MEM_LIMIT: '200m'
     },
     'nodejs6': {
-      SOURCE_FILE: 'source.js',
+      SOURCE_FILE: 'script.js',
+      CPU_SHARE: "0.8",
+      MEM_LIMIT: '300m'
+    },
+    'nodejs8': {
+      SOURCE_FILE: 'script.js',
       CPU_SHARE: "0.8",
       MEM_LIMIT: '300m'
     }
