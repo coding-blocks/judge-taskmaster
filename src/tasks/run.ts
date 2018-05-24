@@ -33,7 +33,7 @@ function execRun (job: RunJob, executed: (result: RunResult) => void) {
 
   // Check for compile_stderr if no stdout found
   let compile_stderr = stdout ? '' : cat(path.join(currentJobDir, 'compile.stderr'))
-  let stderr = compile_stderr || (path.join(currentJobDir, 'run.stderr')).toString()
+  let stderr = compile_stderr || cat((path.join(currentJobDir, 'run.stderr')).toString())
 
   executed({
     id: job.id,
