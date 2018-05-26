@@ -29,6 +29,11 @@ exports = module.exports = {
       CPU_SHARE: "0.8",
       MEM_LIMIT: '200m'
     },
+    'py3': {
+      SOURCE_FILE: 'script.py',
+      CPU_SHARE: "0.8",
+      MEM_LIMIT: '200m'
+    },
     'nodejs6': {
       SOURCE_FILE: 'script.js',
       CPU_SHARE: "0.8",
