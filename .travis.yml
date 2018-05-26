@@ -14,6 +14,7 @@ install:
   - docker pull codingblocks/judge-worker-cpp
   - docker pull codingblocks/judge-worker-java8
   - docker pull codingblocks/judge-worker-py2
+  - docker pull codingblocks/judge-worker-py3
   - docker pull codingblocks/judge-worker-nodejs6
   - docker pull codingblocks/judge-worker-nodejs8
 
