@@ -39,6 +39,11 @@ exports = module.exports = {
       CPU_SHARE: "0.8",
       MEM_LIMIT: '200m'
     },
+      'csharp': {
+      SOURCE_FILE: 'program.cs',
+      CPU_SHARE: "0.8",
+      MEM_LIMIT: '200m'
+    },
     'nodejs6': {
       SOURCE_FILE: 'script.js',
       CPU_SHARE: "0.8",
