@@ -3,10 +3,10 @@ import {expect} from 'chai'
 
 
 describe('run - csharp', () => {
-  it('.cs file runs correctly (c#)', () => {
+  it('.cs file runs correctly (csharp)', () => {
     execRun({
       id: 28,
-      lang: 'c#',
+      lang: 'csharp',
       source: (new Buffer(`
 using System;
 public class HelloWorld {
