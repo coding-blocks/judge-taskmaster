@@ -8,7 +8,7 @@ describe('run - ruby', () => {
       id: 27,
       lang: 'ruby',
       source: (new Buffer(`
-inp = gets.chomp
+inp = gets
 puts "Hello  #{inp}"
       `)).toString('base64'),
       stdin: (new Buffer('World')).toString('base64')
