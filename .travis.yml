@@ -17,6 +17,7 @@ install:
   - docker pull codingblocks/judge-worker-py3
   - docker pull codingblocks/judge-worker-nodejs6
   - docker pull codingblocks/judge-worker-nodejs8
+  - docker pull codingblocks/judge-worker-ruby
 
 script:
   - npm run cover
