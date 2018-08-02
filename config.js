@@ -53,6 +53,11 @@ exports = module.exports = {
       SOURCE_FILE: 'script.rb',
       CPU_SHARE: "0.8",
       MEM_LIMIT: '300m'
+    },
+    'golang': {
+      SOURCE_FILE: 'main.go',
+      CPU_SHARE: "0.8",
+      MEM_LIMIT: '300m'
     }
   }
 }
