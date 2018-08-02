@@ -53,6 +53,11 @@ exports = module.exports = {
       SOURCE_FILE: 'script.rb',
       CPU_SHARE: "0.8",
       MEM_LIMIT: '300m'
+    },
+    'perl': {
+      SOURCE_FILE: 'script.pl',
+      CPU_SHARE: "0.8",
+      MEM_LIMIT: '300m'
     }
   }
 }
