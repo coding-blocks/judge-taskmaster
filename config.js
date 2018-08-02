@@ -53,6 +53,11 @@ exports = module.exports = {
       SOURCE_FILE: 'script.rb',
       CPU_SHARE: "0.8",
       MEM_LIMIT: '300m'
+    },
+    'rust': {
+      SOURCE_FILE: 'script.rs',
+      CPU_SHARE: "1.2",
+      MEM_LIMIT: '500m'
     }
   }
 }
