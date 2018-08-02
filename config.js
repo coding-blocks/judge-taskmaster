@@ -24,6 +24,11 @@ exports = module.exports = {
       CPU_SHARE: "0.5",
       MEM_LIMIT: '100m'
     },
+    'csharp': {
+      SOURCE_FILE: 'program.cs',
+      CPU_SHARE: '1.2',
+      MEM_LIMIT: '500m',
+    },
     'py2': {
       SOURCE_FILE: 'script.py',
       CPU_SHARE: "0.8",

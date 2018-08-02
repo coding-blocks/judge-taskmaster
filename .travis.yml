@@ -13,6 +13,7 @@ install:
   - docker pull codingblocks/judge-worker-c
   - docker pull codingblocks/judge-worker-cpp
   - docker pull codingblocks/judge-worker-golang
+  - docker pull codingblocks/judge-worker-csharp
   - docker pull codingblocks/judge-worker-java8
   - docker pull codingblocks/judge-worker-py2
   - docker pull codingblocks/judge-worker-py3

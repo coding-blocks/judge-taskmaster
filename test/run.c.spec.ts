@@ -5,7 +5,7 @@ import {expect} from 'chai'
 describe('run - c', () => {
   it('.c file runs correctly', () => {
     execRun({
-      id: 20,
+      id: 19,
       lang: 'c',
       source: (new Buffer(`
 #include <stdio.h>
