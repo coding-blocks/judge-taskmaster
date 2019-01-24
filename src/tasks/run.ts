@@ -29,10 +29,10 @@ function execRun (job: RunJob, executed: (result: RunResult) => void) {
     bash -c "/bin/compile.sh && /bin/run.sh"
   `)
 
-  let stdout = cat(path.join(currentJobDir, 'run.stdout')).toString()
+  let stdout = cat(path.join(currentJobDir, 'run.stdout'))
 
-  // Check for compile_stderr if no stdout found
-  let compile_stderr = stdout ? '' : cat(path.join(currentJobDir, 'compile.stderr'))
+  // Check for compile_stderr if can't find a stdout file ; stdout can be ''
+  let compile_stderr = stdout.stderr ? cat(path.join(currentJobDir, 'compile.stderr')) : ''
   let stderr = compile_stderr || cat((path.join(currentJobDir, 'run.stderr')).toString())
 
   executed({
