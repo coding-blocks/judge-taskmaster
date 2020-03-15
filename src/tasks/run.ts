@@ -42,7 +42,7 @@ function execRun (job: RunJob, executed: (result: RunResult) => void) {
     stdout: (new Buffer(stdout)).toString('base64')
   })
 
-  // rm('-rf', currentJobDir)
+  rm('-rf', currentJobDir)
 }
 
 export {
