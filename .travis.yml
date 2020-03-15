@@ -10,7 +10,6 @@ before_install:
 
 install:
   - npm install -D
-  - docker build . -t codingblocks/judge-taskmaster
   - docker pull codingblocks/judge-worker-c
   - docker pull codingblocks/judge-worker-cpp
   - docker pull codingblocks/judge-worker-csharp
