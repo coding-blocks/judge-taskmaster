@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+docker build . -t codingblocks/judge-taskmaster
+
 docker run \
     --rm \
     -v /tmp/runbox:/tmp/runbox \
