@@ -17,7 +17,8 @@ function execRun (job: RunJob, executed: (result: RunResult) => void) {
   fs.writeFileSync(path.join(currentJobDir, 'run.stdin'),
     (new Buffer(job.stdin, 'base64')).toString('ascii'))
 
-  exec(`docker run \\
+  exec(`runguard -t 5 \\
+    docker run \\
     --cpus="${LANG_CONFIG.CPU_SHARE}" \\
     --memory="${LANG_CONFIG.MEM_LIMIT}" \\
     --ulimit nofile=64:64 \\
@@ -41,7 +42,7 @@ function execRun (job: RunJob, executed: (result: RunResult) => void) {
     stdout: (new Buffer(stdout)).toString('base64')
   })
 
-  rm('-rf', currentJobDir)
+  // rm('-rf', currentJobDir)
 }
 
 export {
