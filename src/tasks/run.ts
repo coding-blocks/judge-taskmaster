@@ -17,8 +17,7 @@ function execRun (job: RunJob, executed: (result: RunResult) => void) {
   fs.writeFileSync(path.join(currentJobDir, 'run.stdin'),
     (new Buffer(job.stdin, 'base64')).toString('ascii'))
 
-  exec(`runguard -t 5 \\
-    docker run \\
+  exec(`docker run \\
     --cpus="${LANG_CONFIG.CPU_SHARE}" \\
     --memory="${LANG_CONFIG.MEM_LIMIT}" \\
     --ulimit nofile=64:64 \\
@@ -27,7 +26,7 @@ function execRun (job: RunJob, executed: (result: RunResult) => void) {
     -v "${currentJobDir}":/usr/src/runbox \\
     -w /usr/src/runbox \\
     codingblocks/judge-worker-${job.lang} \\
-    bash -c "/bin/compile.sh && /bin/run.sh"
+    runguard -t 5 bash -c "/bin/compile.sh && /bin/run.sh"
   `)
 
   let stdout = cat(path.join(currentJobDir, 'run.stdout'))
