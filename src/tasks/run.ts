@@ -26,7 +26,7 @@ function execRun (job: RunJob, executed: (result: RunResult) => void) {
     -v "${currentJobDir}":/usr/src/runbox \\
     -w /usr/src/runbox \\
     codingblocks/judge-worker-${job.lang} \\
-    runguard -t 5 bash -c "/bin/compile.sh && /bin/run.sh"
+    /bin/judge.sh -t 5 
   `)
 
   let stdout = cat(path.join(currentJobDir, 'run.stdout'))
