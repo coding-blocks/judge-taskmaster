@@ -8,6 +8,8 @@ export interface RunJob {
 export interface RunResult {
   stdout: string,
   stderr: string,
+  time: number,
+  code: number
   id: number
 }
 

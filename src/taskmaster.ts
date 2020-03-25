@@ -21,7 +21,9 @@ amqp.connect(`amqp://${config.AMQP.USER}:${config.AMQP.PASS}@${config.AMQP.HOST}
         channel.sendToQueue(successQ, (new Buffer(JSON.stringify(<RunResult>{
           id: job.id,
           stderr: jobResult.stderr,
-          stdout: jobResult.stdout
+          stdout: jobResult.stdout,
+          time: jobResult.time,
+          code: jobResult.code
         }))))
         channel.ack(msg)
       });

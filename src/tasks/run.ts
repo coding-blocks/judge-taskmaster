@@ -29,16 +29,22 @@ function execRun (job: RunJob, executed: (result: RunResult) => void) {
     /bin/judge.sh -t 5 
   `)
 
-  let stdout = cat(path.join(currentJobDir, 'run.stdout'))
+  const stdout = cat(path.join(currentJobDir, 'run.stdout'))
 
   // Check for compile_stderr if can't find a stdout file ; stdout can be ''
-  let compile_stderr = stdout.stderr ? cat(path.join(currentJobDir, 'compile.stderr')) : ''
-  let stderr = compile_stderr || cat((path.join(currentJobDir, 'run.stderr')).toString())
+  const compile_stderr = cat(path.join(currentJobDir, 'compile.stderr')).toString()
+  const runguard_stderr = cat(path.join(currentJobDir, 'runguard.stderr')).toString()
+  let stderr = runguard_stderr || compile_stderr || cat((path.join(currentJobDir, 'run.stderr')).toString())
+
+  const run_time = cat(path.join(currentJobDir, 'runguard.time')).toString()
+  const code = cat(path.join(currentJobDir, 'runguard.code')).toString()
 
   executed({
     id: job.id,
     stderr: (new Buffer(stderr)).toString('base64'),
-    stdout: (new Buffer(stdout)).toString('base64')
+    stdout: (new Buffer(stdout)).toString('base64'),
+    time: +run_time,
+    code: +code
   })
 
   rm('-rf', currentJobDir)

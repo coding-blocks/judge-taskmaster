@@ -2,11 +2,11 @@ import {execRun} from '../src/tasks/run'
 import {expect} from 'chai'
 
 
-describe('run - nodejs6', () => {
+describe('run - nodejs10', () => {
   it('.js file runs correctly (NodeJS 6)', () => {
     execRun({
       id: 24,
-      lang: 'nodejs6',
+      lang: 'nodejs10',
       source: (new Buffer(`
 var readline = require('readline');
 

@@ -39,12 +39,12 @@ exports = module.exports = {
       CPU_SHARE: "0.8",
       MEM_LIMIT: '200m'
     },
-    'nodejs6': {
+    'nodejs8': {
       SOURCE_FILE: 'script.js',
       CPU_SHARE: "0.8",
       MEM_LIMIT: '300m'
     },
-    'nodejs8': {
+    'nodejs10': {
       SOURCE_FILE: 'script.js',
       CPU_SHARE: "0.8",
       MEM_LIMIT: '300m'
