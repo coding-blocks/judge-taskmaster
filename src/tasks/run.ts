@@ -26,7 +26,7 @@ function execRun (job: RunJob, executed: (result: RunResult) => void) {
     -v "${currentJobDir}":/usr/src/runbox \\
     -w /usr/src/runbox \\
     codingblocks/judge-worker-${job.lang} \\
-    /bin/judge.sh -t 5 
+    /bin/judge.sh -t ${job.timelimit || 5} 
   `)
 
   const stdout = cat(path.join(currentJobDir, 'run.stdout'))

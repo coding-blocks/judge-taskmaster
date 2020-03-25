@@ -2,6 +2,7 @@ export interface RunJob {
   source: string,
   lang: string,
   stdin: string,
+  timelimit?: number,
   id: number
 }
 
