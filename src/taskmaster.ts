@@ -1,4 +1,4 @@
-import nr from 'newrelic';
+const nr = require('newrelic');
 import * as amqp from 'amqplib/callback_api'
 import {Connection} from 'amqplib/callback_api'
 import {RunJob, RunResult} from './types/job'
