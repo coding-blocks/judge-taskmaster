@@ -1,3 +1,4 @@
+import nr from 'newrelic';
 import * as amqp from 'amqplib/callback_api'
 import {Connection} from 'amqplib/callback_api'
 import {RunJob, RunResult} from './types/job'

@@ -112,3 +112,5 @@ fabric.properties
 
 dist/
 .vscode/
+
+*.swp
