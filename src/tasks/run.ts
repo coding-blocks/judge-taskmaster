@@ -7,7 +7,7 @@ import * as fs from 'fs'
 rm('-rf', config.RUNBOX.DIR)
 mkdir('-p', config.RUNBOX.DIR)
 
-function execRun (job: RunJob, executed: (result: RunResult) => void) {
+async function execRun (job: RunJob): Promise<RunResult> {
   let currentJobDir = path.join(config.RUNBOX.DIR, job.id.toString())
   mkdir('-p', currentJobDir)
   const LANG_CONFIG = config.LANGS[job.lang]
@@ -39,15 +39,15 @@ function execRun (job: RunJob, executed: (result: RunResult) => void) {
   const run_time = cat(path.join(currentJobDir, 'runguard.time')).toString()
   const code = cat(path.join(currentJobDir, 'runguard.code')).toString()
 
-  executed({
+  rm('-rf', currentJobDir)
+
+  return {
     id: job.id,
     stderr: (new Buffer(stderr)).toString('base64'),
     stdout: (new Buffer(stdout)).toString('base64'),
     time: +run_time,
     code: +code
-  })
-
-  rm('-rf', currentJobDir)
+  }
 }
 
 export {

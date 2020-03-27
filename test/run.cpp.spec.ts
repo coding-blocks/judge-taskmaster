@@ -3,8 +3,8 @@ import {expect} from 'chai'
 
 
 describe('run - cpp', () => {
-  it('.cpp file runs correctly', () => {
-    execRun({
+  it('.cpp file runs correctly', async () => {
+    const runResult = await execRun({
       id: 20,
       lang: 'cpp',
       source: (new Buffer(`
@@ -18,8 +18,7 @@ int main () {
 }
       `)).toString('base64'),
       stdin: (new Buffer('World')).toString('base64')
-    }, (runResult) => {
-      expect(new Buffer(runResult.stdout, 'base64').toString('ascii')).to.eq('Hello World')
     })
+    expect(new Buffer(runResult.stdout, 'base64').toString('ascii')).to.eq('Hello World')
   })
 })

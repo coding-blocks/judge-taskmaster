@@ -3,8 +3,8 @@ import {expect} from 'chai'
 
 
 describe('run - csharp', () => {
-  it('.cs file runs correctly', () => {
-    execRun({
+  it('.cs file runs correctly', async () => {
+    const runResult = await execRun({
       id: 21,
       lang: 'csharp',
       source: (new Buffer(`
@@ -17,8 +17,7 @@ public class HelloWorld {
 }
       `)).toString('base64'),
       stdin: (new Buffer('World')).toString('base64')
-    }, (runResult) => {
-      expect(new Buffer(runResult.stdout, 'base64').toString('ascii')).to.eq('Hello World\n')
     })
+    expect(new Buffer(runResult.stdout, 'base64').toString('ascii')).to.eq('Hello World\n')
   })
 })

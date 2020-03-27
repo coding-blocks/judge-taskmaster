@@ -3,8 +3,8 @@ import {expect} from 'chai'
 
 
 describe('run - nodejs10', () => {
-  it('.js file runs correctly (NodeJS 6)', () => {
-    execRun({
+  it('.js file runs correctly (NodeJS 6)', async () => {
+    const runResult = await execRun({
       id: 24,
       lang: 'nodejs10',
       source: (new Buffer(`
@@ -21,8 +21,7 @@ rl.on('line', function (line) {
 });
       `)).toString('base64'),
       stdin: (new Buffer('World')).toString('base64')
-    }, (runResult) => {
-      expect(new Buffer(runResult.stdout, 'base64').toString('ascii')).to.eq('Hello World\n')
     })
+    expect(new Buffer(runResult.stdout, 'base64').toString('ascii')).to.eq('Hello World\n')
   })
 })

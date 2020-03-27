@@ -5,6 +5,9 @@ exports = module.exports = {
     HOST: process.env.AMQP_HOST || "localhost",
     PORT: process.env.AMQP_PORT || "5672"
   },
+  SENTRY: {
+    DSN: process.env.SENTRY_DSN || 'wont work'
+  },
   RUNBOX: {
     DIR: process.env.RUNBOX_DIR || "/tmp/runbox"
   },

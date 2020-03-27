@@ -3,8 +3,8 @@ import {expect} from 'chai'
 
 
 describe('run - java8', () => {
-  it('.java file runs correctly (Java8)', () => {
-    execRun({
+  it('.java file runs correctly (Java8)', async () => {
+    const runResult = await execRun({
       id: 22,
       lang: 'java8',
       source: (new Buffer(`
@@ -19,8 +19,7 @@ public class Main {
 }
       `)).toString('base64'),
       stdin: (new Buffer('World')).toString('base64')
-    }, (runResult) => {
-      expect(new Buffer(runResult.stdout, 'base64').toString('ascii')).to.eq('Hello World\n')
     })
+    expect(new Buffer(runResult.stdout, 'base64').toString('ascii')).to.eq('Hello World\n')
   })
 })
