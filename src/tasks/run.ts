@@ -1,5 +1,5 @@
 import config = require('../../config.js')
-import {cat, exec, mkdir, rm, touch} from 'shelljs'
+import {cat, exec, mkdir, rm, touch, head} from 'shelljs'
 import {RunJob, RunResult} from '../types/job'
 import * as path from 'path'
 import * as fs from 'fs'
@@ -15,7 +15,7 @@ async function execRun (job: RunJob): Promise<RunResult> {
   fs.writeFileSync(path.join(currentJobDir, LANG_CONFIG.SOURCE_FILE),
     (new Buffer(job.source, 'base64')).toString('ascii'))
   fs.writeFileSync(path.join(currentJobDir, 'run.stdin'),
-    (new Buffer(job.stdin, 'base64')).toString('ascii'))
+    (new Buffer(job.stdin, 'base64')).toString('ascii'))    
 
   exec(`docker run \\
     --cpus="${LANG_CONFIG.CPU_SHARE}" \\
@@ -29,7 +29,9 @@ async function execRun (job: RunJob): Promise<RunResult> {
     /bin/judge.sh -t ${job.timelimit || 5} 
   `)
 
-  const stdout = cat(path.join(currentJobDir, 'run.stdout'))
+  const stdout = exec(`
+    head -c 65536 ${path.join(currentJobDir, 'run.stdout')}
+  `)
 
   // Check for compile_stderr if can't find a stdout file ; stdout can be ''
   const compile_stderr = cat(path.join(currentJobDir, 'compile.stderr')).toString()
@@ -39,7 +41,7 @@ async function execRun (job: RunJob): Promise<RunResult> {
   const run_time = cat(path.join(currentJobDir, 'runguard.time')).toString()
   const code = cat(path.join(currentJobDir, 'runguard.code')).toString()
 
-  rm('-rf', currentJobDir)
+  rm('-rf', currentJobDir) 
 
   return {
     id: job.id,
