@@ -1,16 +1,16 @@
-import {execRun} from '../src/tasks/run'
+import {executor} from '../../src/tasks/'
 import {expect} from 'chai'
 
 
-describe('run - nodejs10', () => {
-  it('.js file runs correctly (NodeJS 6)', async () => {
-    const runResult = await execRun({
-      id: 24,
-      lang: 'nodejs10',
+describe('run - nodejs8', () => {
+  it('.js file runs correctly (NodeJS 8)', async () => {
+    const runResult = await executor({
+      id: 25,
+      lang: 'nodejs8',
       source: (new Buffer(`
-var readline = require('readline');
+const readline = require('readline');
 
-var rl = readline.createInterface({
+const rl = readline.createInterface({
   input: process.stdin,
   output: process.stdout,
   terminal: false

@@ -1,10 +1,10 @@
-import {execRun} from '../src/tasks/run'
+import {executor} from '../../src/tasks/'
 import {expect} from 'chai'
 
 
 describe('run - csharp', () => {
   it('.cs file runs correctly', async () => {
-    const runResult = await execRun({
+    const runResult = await executor({
       id: 21,
       lang: 'csharp',
       source: (new Buffer(`

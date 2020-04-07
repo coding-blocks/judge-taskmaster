@@ -1,15 +1,14 @@
-import {execRun} from '../src/tasks/run'
+import {executor} from '../../src/tasks/'
 import {expect} from 'chai'
 
 
-describe('run - py3', () => {
-  it('.py file runs correctly (Python 3.0)', async () => {
-    const runResult = await execRun({
-      id: 26,
-      lang: 'py3',
+describe('run - ruby', () => {
+  it('.rb file runs correctly', async () => {
+    const runResult = await executor({
+      id: 27,
+      lang: 'ruby',
       source: (new Buffer(`
-inp = input()
-print("Hello " + inp)
+puts "Hello " + gets.to_s
       `)).toString('base64'),
       stdin: (new Buffer('World')).toString('base64')
     })

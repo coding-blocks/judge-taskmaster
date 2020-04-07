@@ -1,10 +1,10 @@
-import {execRun} from '../src/tasks/run'
+import {executor} from '../../src/tasks/'
 import {expect} from 'chai'
 
 
 describe('run - java8', () => {
   it('.java file runs correctly (Java8)', async () => {
-    const runResult = await execRun({
+    const runResult = await executor({
       id: 22,
       lang: 'java8',
       source: (new Buffer(`

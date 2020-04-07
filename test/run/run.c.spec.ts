@@ -1,19 +1,19 @@
-import {execRun} from '../src/tasks/run'
+import {executor} from '../../src/tasks/'
 import {expect} from 'chai'
 
 
-describe('run - cpp', () => {
-  it('.cpp file runs correctly', async () => {
-    const runResult = await execRun({
-      id: 20,
-      lang: 'cpp',
+describe('run - c', () => {
+  it('.c file runs correctly', async () => {
+    const runResult = await executor({
+      id: 19,
+      lang: 'c',
       source: (new Buffer(`
-#include <iostream>
-using namespace std;
+#include <stdio.h>
+
 int main () {
     char in[10];
-    cin>>in;
-    cout<<"Hello "<<in;
+    scanf("%s", in);
+    printf("Hello %s", in);
     return 0;
 }
       `)).toString('base64'),

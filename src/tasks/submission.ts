@@ -3,11 +3,22 @@ import { cat, exec, mkdir, rm } from 'shelljs'
 import { SubmissionJob, SubmissionResult } from '../types/job'
 import * as path from 'path'
 import * as fs from 'fs'
-import http = require('http')
+import http from 'http'
 import { Scenario } from 'types/scenario.js'
 
-rm('-rf', config.RUNBOX.DIR)
-mkdir('-p', config.RUNBOX.DIR)
+export const download = (url: string, dest: string): Promise<http.ClientRequest> => {
+  const file = fs.createWriteStream(dest);
+  return new Promise((resolve, reject) =>
+    http.get(url, function(response) {
+      response.pipe(file);
+      file.on('finish', function() {
+        resolve()
+      });
+    }).on('error', err => {
+      reject(err)
+    })
+  )
+}
 
 class SubmissionScenario implements Scenario {
   setup(currentJobDir: string, job: SubmissionJob) {
