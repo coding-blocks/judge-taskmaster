@@ -22,6 +22,16 @@ exports = module.exports = {
       CPU_SHARE: "0.8",
       MEM_LIMIT: '200m',
     },
+    'rust': {
+      SOURCE_FILE: 'script.rs',
+      CPU_SHARE: "0.8",
+      MEM_LIMIT: '200m',
+    },
+    'golang': {
+      SOURCE_FILE: 'main.go',
+      CPU_SHARE: "0.8",
+      MEM_LIMIT: '200m',
+    },
     'c': {
       SOURCE_FILE: 'source.c',
       CPU_SHARE: "0.5",
