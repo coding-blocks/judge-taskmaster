@@ -29,7 +29,9 @@ async function execRun (job: RunJob): Promise<RunResult> {
     /bin/judge.sh -t ${job.timelimit || 5} 
   `)
 
-  const stdout = cat(path.join(currentJobDir, 'run.stdout'))
+  const stdout = exec(`
+    head -c 65536 ${path.join(currentJobDir, 'run.stdout')}
+  `)
 
   // Check for compile_stderr if can't find a stdout file ; stdout can be ''
   const compile_stderr = cat(path.join(currentJobDir, 'compile.stderr')).toString()

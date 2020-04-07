@@ -6,7 +6,7 @@ exports = module.exports = {
     PORT: process.env.AMQP_PORT || "5672"
   },
   SENTRY: {
-    DSN: process.env.SENTRY_DSN || 'wont work'
+    DSN: process.env.SENTRY_DSN
   },
   RUNBOX: {
     DIR: process.env.RUNBOX_DIR || "/tmp/runbox"
