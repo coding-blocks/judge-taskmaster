@@ -33,8 +33,7 @@ async function execSubmission(job: SubmissionJob): Promise<SubmissionResult> {
 
   // Check for compile_stderr if can't find a stdout file ; stdout can be ''
   const compile_stderr = cat(path.join(currentJobDir, 'compile.stderr')).toString()
-  const runguard_stderr = cat(path.join(currentJobDir, 'runguard.stderr')).toString()
-  let stderr = runguard_stderr || compile_stderr || cat((path.join(currentJobDir, 'run.stderr')).toString())
+  let stderr = compile_stderr || cat((path.join(currentJobDir, 'run.stderr')).toString())
 
   rm('-rf', currentJobDir)
 

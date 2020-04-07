@@ -35,8 +35,7 @@ async function execRun (job: RunJob): Promise<RunResult> {
 
   // Check for compile_stderr if can't find a stdout file ; stdout can be ''
   const compile_stderr = cat(path.join(currentJobDir, 'compile.stderr')).toString()
-  const runguard_stderr = cat(path.join(currentJobDir, 'runguard.stderr')).toString()
-  let stderr = runguard_stderr || compile_stderr || cat((path.join(currentJobDir, 'run.stderr')).toString())
+  let stderr = compile_stderr || cat((path.join(currentJobDir, 'run.stderr')).toString())
 
   const run_time = cat(path.join(currentJobDir, 'runguard.time')).toString()
   const code = cat(path.join(currentJobDir, 'runguard.code')).toString()
