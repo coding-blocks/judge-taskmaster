@@ -1,29 +1,42 @@
-export interface RunJob {
+export interface Job {
+  id: number,
   source: string,
   lang: string,
-  stdin: string,
-  timelimit?: number,
-  id: number
+  timelimit?: number
 }
 
-export interface RunResult {
+export interface Result {
+  id: number,
+  stderr: string
+}
+
+export interface TestcaseJob {
+  id: number, 
+  input: string, 
+  output: string
+}
+
+export interface TestcaseResult { 
+  id: number, 
+  score: number, 
+  time: string, 
+  result: string 
+}
+
+export interface RunJob extends Job {
+  stdin: string
+}
+
+export interface RunResult extends Result {
   stdout: string,
-  stderr: string,
   time: number,
   code: number
-  id: number
 }
 
-export interface SubmissionJob {
-  id: number
-  source: string,
-  lang: string,
-  timelimit?: number,
-  testcases: [{ id: number, input: string, output: string }],
+export interface SubmissionJob extends Job {
+  testcases: Array<TestcaseJob>
 }
 
-export interface SubmissionResult {
-  id: number,
-  stderr: string,
-  testcases: [{ id: number, sscore: number, time: string, result: string }]
+export interface SubmissionResult extends Result {
+  testcases: Array<TestcaseResult>
 }

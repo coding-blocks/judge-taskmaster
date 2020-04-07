@@ -16,7 +16,7 @@
     "mocha-parallel-tests": "^2.0.0",
     "nyc": "^11.3.0",
     "ts-node": "^7.0.0",
-    "typescript": "^2.6.1"
+    "typescript": "^3.8.3"
   },
   "dependencies": {
     "amqplib": "^0.5.2",

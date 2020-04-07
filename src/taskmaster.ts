@@ -2,8 +2,8 @@ const nr = require('newrelic');
 import * as Raven from 'raven'
 import * as amqp from 'amqplib/callback_api'
 import {Connection} from 'amqplib/callback_api'
-import {RunJob, RunResult} from './types/job'
-import {execRun} from './tasks/run'
+import {RunJob, RunResult, SubmissionResult} from './types/job'
+import { executor } from './tasks'
 import config = require('../config.js')
 
 // =============== Setup Raven
@@ -27,8 +27,9 @@ amqp.connect(`amqp://${config.AMQP.USER}:${config.AMQP.PASS}@${config.AMQP.HOST}
     channel.consume(jobQ, async (msg) => {
       try {
         const job: RunJob = JSON.parse(msg.content.toString())
-        const jobResult: RunResult = await execRun(job)
+        const jobResult: RunResult|SubmissionResult = await executor(job)
         
+        // TODO
         channel.sendToQueue(successQ, (new Buffer(JSON.stringify(<RunResult>{
           id: job.id,
           stderr: jobResult.stderr,
@@ -41,7 +42,5 @@ amqp.connect(`amqp://${config.AMQP.USER}:${config.AMQP.PASS}@${config.AMQP.HOST}
         Raven.captureException(err);
       }
     })
-
-
   })
 })
