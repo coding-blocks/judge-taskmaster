@@ -15,14 +15,15 @@ export interface RunResult {
 }
 
 export interface SubmissionJob {
-  id: number,
+  id: number
   source: string,
   lang: string,
-  testcases: [{input: string, output: string}]
-  getstdout: boolean,
+  timelimit?: number,
+  testcases: [{ id: number, input: string, output: string }],
 }
 
 export interface SubmissionResult {
   id: number,
-  results: [{resultcode: number, stdout?: string, stderr?: string}]
+  stderr: string,
+  testcases: [{ id: number, sscore: number, time: string, result: string }]
 }
