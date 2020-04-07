@@ -3,6 +3,7 @@ import { cat, exec, mkdir, rm } from 'shelljs'
 import { SubmissionJob, SubmissionResult } from '../types/job'
 import * as path from 'path'
 import * as fs from 'fs'
+import http = require('http')
 
 rm('-rf', config.RUNBOX.DIR)
 mkdir('-p', config.RUNBOX.DIR)
@@ -12,8 +13,26 @@ async function execSubmission(job: SubmissionJob): Promise<SubmissionResult> {
   mkdir('-p', currentJobDir)
   const LANG_CONFIG = config.LANGS[job.lang]
 
+  job.testcases.map(testcase => {
+    mkdir('-p', `currentJobDir/${testcase.id}`)
+    // const file = fs.createWriteStream();
+    Promise.all([http.get(testcase.input), http.get(testcase.output)])
+      .then(values => {
+        values.map(value => {
+
+        })
+      })
+  })
+  const request = http.get(job.testcases, function (response) {
+    response.pipe(file);
+  });
+
+
+
   fs.writeFileSync(path.join(currentJobDir, LANG_CONFIG.SOURCE_FILE),
     (new Buffer(job.source, 'base64')).toString('ascii'))
+  fs.writeFileSync(path.join(currentJobDir, ),
+    (new Buffer(job.testcases)))
 
   exec(`docker run \\
     --cpus="${LANG_CONFIG.CPU_SHARE}" \\
@@ -30,6 +49,8 @@ async function execSubmission(job: SubmissionJob): Promise<SubmissionResult> {
   const stdout = exec(`
     head -c 65536 ${path.join(currentJobDir, 'run.stdout')}
   `)
+
+
 
   // Check for compile_stderr if can't find a stdout file ; stdout can be ''
   const compile_stderr = cat(path.join(currentJobDir, 'compile.stderr')).toString()
