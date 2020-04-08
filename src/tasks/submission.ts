@@ -30,13 +30,12 @@ class SubmissionScenario implements Scenario {
     const testCasesDir = path.join(currentJobDir, 'testcases')
     mkdir('-p', testCasesDir)
 
-    job.testcases.map(async testcase => {
+    return Promise.all(job.testcases.map(async testcase => {
       const rootDir = path.join(testCasesDir, '' + testcase.id)
       mkdir('-p', rootDir)
-      const input = await download(testcase.input, rootDir)
-      const output = await download(testcase.output, rootDir)
-    })
-
+      const input = await download(testcase.input, path.join(rootDir, 'stdin'))
+      const output = await download(testcase.output, path.join(rootDir, 'stdout'))
+    }))
   }
 
   async result(currentJobDir: string): Promise<SubmissionResult> {
