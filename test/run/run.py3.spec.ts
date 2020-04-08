@@ -1,10 +1,10 @@
-import {executor} from '../../src/tasks/'
+import {runExecutor} from '../../src/tasks/'
 import {expect} from 'chai'
 
 
 describe('run - py3', () => {
   it('.py file runs correctly (Python 3.0)', async () => {
-    const runResult = await executor({
+    const runResult = await runExecutor({
       id: 26,
       lang: 'py3',
       source: (new Buffer(`

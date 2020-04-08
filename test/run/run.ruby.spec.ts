@@ -1,10 +1,10 @@
-import {executor} from '../../src/tasks/'
+import {runExecutor} from '../../src/tasks/'
 import {expect} from 'chai'
 
 
 describe('run - ruby', () => {
   it('.rb file runs correctly', async () => {
-    const runResult = await executor({
+    const runResult = await runExecutor({
       id: 27,
       lang: 'ruby',
       source: (new Buffer(`

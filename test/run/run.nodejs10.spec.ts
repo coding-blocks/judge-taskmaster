@@ -1,10 +1,10 @@
-import {executor} from '../../src/tasks/'
+import {runExecutor} from '../../src/tasks/'
 import {expect} from 'chai'
 
 
 describe('run - nodejs10', () => {
   it('.js file runs correctly (NodeJS 6)', async () => {
-    const runResult = await executor({
+    const runResult = await runExecutor({
       id: 24,
       lang: 'nodejs10',
       source: (new Buffer(`

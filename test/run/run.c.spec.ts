@@ -1,10 +1,10 @@
-import {executor} from '../../src/tasks/'
+import {runExecutor} from '../../src/tasks/'
 import {expect} from 'chai'
 
 
 describe('run - c', () => {
   it('.c file runs correctly', async () => {
-    const runResult = await executor({
+    const runResult = await runExecutor({
       id: 19,
       lang: 'c',
       source: (new Buffer(`

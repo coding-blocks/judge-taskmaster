@@ -1,10 +1,10 @@
-import {executor} from '../../src/tasks/'
+import {runExecutor} from '../../src/tasks/'
 import {expect} from 'chai'
 
 
 describe('run - cpp', () => {
   it('.cpp file runs correctly', async () => {
-    const runResult = await executor({
+    const runResult = await runExecutor({
       id: 20,
       lang: 'cpp',
       source: (new Buffer(`
