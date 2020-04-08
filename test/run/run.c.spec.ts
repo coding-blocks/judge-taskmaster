@@ -1,15 +1,13 @@
-import {runExecutor} from '../../src/tasks/'
+import {execute} from '../../src/tasks/'
 import {expect} from 'chai'
-
-
+import { RunJob } from '../../src/tasks/job'
 describe('run - c', () => {
   it('.c file runs correctly', async () => {
-    const runResult = await runExecutor({
+    const runResult = await execute(new RunJob({
       id: 19,
       lang: 'c',
       source: (new Buffer(`
 #include <stdio.h>
-
 int main () {
     char in[10];
     scanf("%s", in);
@@ -18,7 +16,7 @@ int main () {
 }
       `)).toString('base64'),
       stdin: (new Buffer('World')).toString('base64')
-    })
+    }))
     expect(new Buffer(runResult.stdout, 'base64').toString('ascii')).to.eq('Hello World')
   })
 })

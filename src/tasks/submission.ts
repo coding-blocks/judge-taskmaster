@@ -1,6 +1,6 @@
 import config = require('../../config.js')
 import { cat, ls, mkdir, exec } from 'shelljs'
-import { SubmissionJob } from 'types/job'
+import { SubmitJob } from './job'
 import { SubmissionResult } from 'types/result'
 import * as path from 'path'
 import * as fs from 'fs'
@@ -23,7 +23,7 @@ export const download = (url: string, dest: string): Promise<ClientRequest> => {
 }
 
 class SubmissionScenario implements Scenario {
-  setup(currentJobDir: string, job: SubmissionJob) {
+  setup(currentJobDir: string, job: SubmitJob) {
     const LANG_CONFIG = config.LANGS[job.lang]
 
     fs.writeFileSync(path.join(currentJobDir, LANG_CONFIG.SOURCE_FILE),

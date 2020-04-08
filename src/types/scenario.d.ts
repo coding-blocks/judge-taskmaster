@@ -1,4 +1,5 @@
-import { Job, Result } from "./job";
+import { Job } from '../tasks/job';
+import { Result } from './result';
 
 export interface Scenario {
   setup(currentJobDir: string, job: Job)

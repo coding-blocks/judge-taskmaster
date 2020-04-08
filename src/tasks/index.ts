@@ -1,14 +1,15 @@
-import { RunJob, SubmissionJob, Job } from "types/job";
-import { RunResult, SubmissionResult, Result } from 'types/result'
+import { Result, RunResult, SubmissionResult } from 'types/result'
 import config = require('../../config.js')
 import {exec, mkdir, rm} from 'shelljs'
 import * as path from 'path'
 
 import RunScenario from './run'
 import SubmissionScenario from './submission'
-import { Scenario } from "types/scenario";
+import { RunJob, SubmitJob } from "./job";
 
-export const executor = <J, R>(scenario: Scenario) => async (job: Job & J): Promise<Result & R> => {
+export function execute(job: RunJob): Promise<RunResult>
+export function execute(job: SubmitJob): Promise<SubmissionResult>
+export async function execute (job) {
   // Create RUNBOX
   rm('-rf', config.RUNBOX.DIR)
   mkdir('-p', config.RUNBOX.DIR)
@@ -16,6 +17,13 @@ export const executor = <J, R>(scenario: Scenario) => async (job: Job & J): Prom
   mkdir('-p', currentJobDir)
 
   const LANG_CONFIG = config.LANGS[job.lang]
+
+  let scenario
+  if (job instanceof RunJob) {
+    scenario = RunScenario
+  } else if (job instanceof SubmitJob) {
+    scenario = SubmissionScenario
+  }
 
   // Setup RUNBOX
   await scenario.setup(currentJobDir, job) // TODO:
@@ -33,12 +41,9 @@ export const executor = <J, R>(scenario: Scenario) => async (job: Job & J): Prom
   `)
 
   // Get result
-  const result = <Result & R>(await scenario.result(currentJobDir, job.id))
+  const result = await scenario.result(currentJobDir, job.id)
 
   rm('-rf', currentJobDir)
 
   return result
 }
-
-export const runExecutor = executor<RunJob, RunResult>(RunScenario)
-export const submissionExecutor = executor<SubmissionJob, SubmissionResult>(SubmissionScenario)

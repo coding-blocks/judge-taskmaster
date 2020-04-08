@@ -1,5 +1,7 @@
-import {submissionExecutor} from '../../src/tasks/'
+import {execute} from '../../src/tasks/'
 import {expect} from 'chai'
+import { SubmitJob } from '../../src/tasks/job'
+import { SubmissionResult } from '../../src/types/result'
 
 describe('submit - cpp', () => {
   it('.cpp file submits correctly', async () => {
@@ -13,7 +15,7 @@ describe('submit - cpp', () => {
           return 0;
       }`
 
-    const submitResult = await submissionExecutor({
+    const submitResult = <SubmissionResult>await execute(new SubmitJob({
       id: 1,
       lang: 'cpp',
       source: (new Buffer(source)).toString('base64'),
@@ -22,7 +24,7 @@ describe('submit - cpp', () => {
         input: 'https://minio.cb.lk/public/input', 
         output: 'https://minio.cb.lk/public/output' 
       }]
-    })
+    }))
     
     console.log(submitResult)
 
