@@ -47,7 +47,7 @@ class SubmissionScenario implements Scenario {
     if (compile_stderr) {
       return {
         id: jobId,
-        stderr: compile_stderr,
+        stderr: (new Buffer(compile_stderr)).toString('base64'),
         testcases: []
       }
     }
@@ -83,7 +83,7 @@ class SubmissionScenario implements Scenario {
 
     return {
       id: jobId,
-      stderr: compile_stderr,
+      stderr: (new Buffer(compile_stderr)).toString('base64'),
       testcases
     }
   }
