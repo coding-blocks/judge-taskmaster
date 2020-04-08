@@ -1,4 +1,5 @@
-import { RunJob, SubmissionJob, RunResult, SubmissionResult, Job, Result } from "types/job";
+import { RunJob, SubmissionJob, Job } from "types/job";
+import { RunResult, SubmissionResult, Result } from 'types/result'
 import config = require('../../config.js')
 import {exec, mkdir, rm} from 'shelljs'
 import * as path from 'path'

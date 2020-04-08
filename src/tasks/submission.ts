@@ -1,6 +1,7 @@
 import config = require('../../config.js')
 import { cat, exec, mkdir, rm } from 'shelljs'
-import { SubmissionJob, SubmissionResult } from '../types/job'
+import { SubmissionJob } from 'types/job'
+import { SubmissionResult } from 'types/result'
 import * as path from 'path'
 import * as fs from 'fs'
 import * as https from 'https'

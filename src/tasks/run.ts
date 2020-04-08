@@ -1,6 +1,7 @@
 import config = require('../../config.js')
 import {cat, exec, mkdir, rm, touch, head} from 'shelljs'
-import {RunJob, RunResult} from '../types/job'
+import { RunJob } from 'types/job'
+import { RunResult } from 'types/result'
 import * as path from 'path'
 import * as fs from 'fs'
 import { Scenario } from 'types/scenario'
