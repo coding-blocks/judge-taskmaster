@@ -3,10 +3,7 @@ import {cat, exec, mkdir, rm, touch, head} from 'shelljs'
 import {RunJob, RunResult} from '../types/job'
 import * as path from 'path'
 import * as fs from 'fs'
-import { Scenario } from 'types/scenario.js'
-
-rm('-rf', config.RUNBOX.DIR)
-mkdir('-p', config.RUNBOX.DIR)
+import { Scenario } from 'types/scenario'
 
 class RunScenario implements Scenario {
   setup(currentJobDir: string, job: RunJob) {
@@ -20,7 +17,7 @@ class RunScenario implements Scenario {
 
   async result(currentJobDir: string, jobId: number): Promise<RunResult> {
     const stdout = exec(`
-      head -c 65536 ${path.join(currentJobDir, 'run.stdout')}
+      head -c ${config.MAX_OUTPUT_BUFFER} ${path.join(currentJobDir, 'run.stdout')}
     `)
 
     // Check for compile_stderr if can't find a stdout file ; stdout can be ''

@@ -2,8 +2,7 @@ const nr = require('newrelic');
 import * as Raven from 'raven'
 import * as amqp from 'amqplib/callback_api'
 import {Connection} from 'amqplib/callback_api'
-import {RunJob, RunResult, SubmissionResult} from './types/job'
-import { executor } from './tasks'
+import { runExecutor, submissionExecutor } from './tasks'
 import config = require('../config.js')
 
 // =============== Setup Raven
@@ -26,17 +25,16 @@ amqp.connect(`amqp://${config.AMQP.USER}:${config.AMQP.PASS}@${config.AMQP.HOST}
     channel.assertQueue(jobQ);
     channel.consume(jobQ, async (msg) => {
       try {
-        const job: RunJob = JSON.parse(msg.content.toString())
-        const jobResult: RunResult|SubmissionResult = await executor(job)
+        const job = JSON.parse(msg.content.toString())
+        let jobResult
+        if (job.testcases) {
+          jobResult = await submissionExecutor(job)
+        } else {
+          jobResult = await runExecutor(job)
+        }
         
         // TODO
-        channel.sendToQueue(successQ, (new Buffer(JSON.stringify(<RunResult>{
-          id: job.id,
-          stderr: jobResult.stderr,
-          stdout: jobResult.stdout,
-          time: jobResult.time,
-          code: jobResult.code
-        }))))
+        channel.sendToQueue(successQ, (new Buffer(JSON.stringify(jobResult))))
         channel.ack(msg)
       } catch (err) {
         Raven.captureException(err);

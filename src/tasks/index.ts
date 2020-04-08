@@ -1,12 +1,13 @@
-import { RunJob, SubmissionJob, RunResult, SubmissionResult } from "types/job";
+import { RunJob, SubmissionJob, RunResult, SubmissionResult, Job, Result } from "types/job";
 import config = require('../../config.js')
 import {exec, mkdir, rm} from 'shelljs'
 import * as path from 'path'
 
 import RunScenario from './run'
 import SubmissionScenario from './submission'
+import { Scenario } from "types/scenario";
 
-export const executor = async (job: RunJob|SubmissionJob): Promise<RunResult|SubmissionResult> => {
+export const executor = <J, R>(scenario: Scenario) => async (job: Job & J): Promise<Result & R> => {
   // Create RUNBOX
   rm('-rf', config.RUNBOX.DIR)
   mkdir('-p', config.RUNBOX.DIR)
@@ -14,10 +15,9 @@ export const executor = async (job: RunJob|SubmissionJob): Promise<RunResult|Sub
   mkdir('-p', currentJobDir)
 
   const LANG_CONFIG = config.LANGS[job.lang]
-  const scenario = job.hasOwnProperty('testcases') ? SubmissionScenario : RunScenario
 
   // Setup RUNBOX
-  await scenario.setup(currentJobDir, <RunJob&SubmissionJob>job) // TODO:
+  await scenario.setup(currentJobDir, job) // TODO:
 
   // Run worker
   exec(`docker run \\
@@ -33,9 +33,12 @@ export const executor = async (job: RunJob|SubmissionJob): Promise<RunResult|Sub
   `)
 
   // Get result
-  const result = await scenario.result(currentJobDir, job.id)
+  const result = <Result & R>(await scenario.result(currentJobDir, job.id))
 
   rm('-rf', currentJobDir)
 
   return result
 }
+
+export const runExecutor = executor<RunJob, RunResult>(RunScenario)
+export const submissionExecutor = executor<SubmissionJob, SubmissionResult>(SubmissionScenario)

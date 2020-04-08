@@ -1,4 +1,5 @@
 exports = module.exports = {
+  MAX_OUTPUT_BUFFER: 65536,
   AMQP: {
     USER: process.env.AMQP_USER || 'codingblocks',
     PASS: process.env.AMQP_PASS || 'codingblocks',
