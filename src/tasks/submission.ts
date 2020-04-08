@@ -27,8 +27,16 @@ class SubmissionScenario implements Scenario {
 
     fs.writeFileSync(path.join(currentJobDir, LANG_CONFIG.SOURCE_FILE),
       (new Buffer(job.source, 'base64')).toString('ascii'))
-    fs.writeFileSync(path.join(currentJobDir, ),
-      (new Buffer(job.testcases)))
+    const testCasesDir = path.join(currentJobDir, 'testcases')
+    mkdir('-p', testCasesDir)
+
+    job.testcases.map(async testcase => {
+      const rootDir = path.join(testCasesDir, '' + testcase.id)
+      mkdir('-p', rootDir)
+      const input = await download(testcase.input, rootDir)
+      const output = await download(testcase.output, rootDir)
+    })
+
   }
 
   async result(currentJobDir: string): Promise<SubmissionResult> {
