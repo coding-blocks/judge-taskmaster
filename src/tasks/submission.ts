@@ -1,5 +1,5 @@
 import config = require('../../config.js')
-import { cat, exec, mkdir, rm } from 'shelljs'
+import { cat, ls, mkdir, exec } from 'shelljs'
 import { SubmissionJob } from 'types/job'
 import { SubmissionResult } from 'types/result'
 import * as path from 'path'
@@ -40,13 +40,52 @@ class SubmissionScenario implements Scenario {
     }))
   }
 
-  async result(currentJobDir: string): Promise<SubmissionResult> {
-    // TODO
-    return Promise.resolve({
-      id: 1,
-      stderr: '',
-      testcases: []
+  async result(currentJobDir: string, jobId: number): Promise<SubmissionResult> {
+    // Check for compile_stderr if can't find a stdout file ; stdout can be ''
+    const compile_stderr = cat(path.join(currentJobDir, 'compile.stderr')).toString()
+
+    if (compile_stderr) {
+      return {
+        id: jobId,
+        stderr: compile_stderr,
+        testcases: []
+      }
+    }
+
+    const testcases = ls(path.join(currentJobDir, 'testcases')).map(testcase => {
+      const currentTestcasePath = path.join(currentJobDir, 'testcases', testcase)
+
+      const stderr = cat(path.join(currentTestcasePath, 'run.stderr')).toString()
+      const time = cat(path.join(currentTestcasePath, 'runguard.time')).toString().trim()
+      const code = cat(path.join(currentTestcasePath, 'runguard.code')).toString()
+
+      const runOutputFile = path.join(currentTestcasePath, 'run.stdout')
+      const expectedOutputFile = path.join(currentTestcasePath, 'stdout')
+
+      const result = new Array(
+        +code === 143 && "TLE",
+        +code === 137 && "MLE",
+        +code !== 0 && "Run Error",
+        +code === 0 && "Success"
+      ).reduce((acc, cur) => acc || cur)
+      
+      const diff = exec(`
+        diff -b -a ${runOutputFile} ${expectedOutputFile}
+      `)
+
+      return {
+        id: +testcase,
+        time,
+        result,
+        score: diff.code === 0 ? 100 : 0
+      }
     })
+
+    return {
+      id: jobId,
+      stderr: compile_stderr,
+      testcases
+    }
   }
 }
 

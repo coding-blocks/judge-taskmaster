@@ -25,7 +25,11 @@ describe('Submission Scenario', () => {
       source: (new Buffer(source)).toString('base64'),
       lang: 'py3',
       timelimit: 5,
-      testcases: [{ id: 122, input: 'https://minio.cb.lk/public/input', output: 'https://minio.cb.lk/public/output' }]
+      testcases: [{ 
+        id: 122, 
+        input: 'https://minio.cb.lk/public/input', 
+        output: 'https://minio.cb.lk/public/output' 
+      }]
     }
 
     rm('-rf', config.RUNBOX.DIR)

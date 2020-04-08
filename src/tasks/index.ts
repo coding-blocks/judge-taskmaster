@@ -26,7 +26,6 @@ export const executor = <J, R>(scenario: Scenario) => async (job: Job & J): Prom
     --memory="${LANG_CONFIG.MEM_LIMIT}" \\
     --ulimit nofile=64:64 \\
     --rm \\
-    --read-only \\
     -v "${currentJobDir}":/usr/src/runbox \\
     -w /usr/src/runbox \\
     codingblocks/judge-worker-${job.lang} \\
