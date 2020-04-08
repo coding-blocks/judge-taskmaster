@@ -3,15 +3,16 @@ import { cat, exec, mkdir, rm } from 'shelljs'
 import { SubmissionJob, SubmissionResult } from '../types/job'
 import * as path from 'path'
 import * as fs from 'fs'
-import http from 'http'
+import * as https from 'https'
 import { Scenario } from 'types/scenario.js'
+import { ClientRequest } from 'http';
 
-export const download = (url: string, dest: string): Promise<http.ClientRequest> => {
+export const download = (url: string, dest: string): Promise<ClientRequest> => {
   const file = fs.createWriteStream(dest);
   return new Promise((resolve, reject) =>
-    http.get(url, function(response) {
+    https.get(url, function (response) {
       response.pipe(file);
-      file.on('finish', function() {
+      file.on('finish', function () {
         resolve()
       });
     }).on('error', err => {
@@ -24,16 +25,6 @@ class SubmissionScenario implements Scenario {
   setup(currentJobDir: string, job: SubmissionJob) {
     const LANG_CONFIG = config.LANGS[job.lang]
 
-    job.testcases.map(testcase => {
-      mkdir('-p', `currentJobDir/${testcase.id}`)
-      // const file = fs.createWriteStream();
-      Promise.all([http.get(testcase.input), http.get(testcase.output)])
-        .then(values => {
-          values.map(value => {
-  
-          })
-        })
-    })
     fs.writeFileSync(path.join(currentJobDir, LANG_CONFIG.SOURCE_FILE),
       (new Buffer(job.source, 'base64')).toString('ascii'))
     fs.writeFileSync(path.join(currentJobDir, ),
@@ -42,9 +33,11 @@ class SubmissionScenario implements Scenario {
 
   async result(currentJobDir: string): Promise<SubmissionResult> {
     // TODO
-    return {
-
-    }
+    return Promise.resolve({
+      id: 1,
+      stderr: '',
+      testcases: []
+    })
   }
 }
 
