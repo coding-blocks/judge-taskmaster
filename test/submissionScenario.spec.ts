@@ -16,9 +16,7 @@ describe('Submission Scenario', () => {
     const content = fs.readFileSync('/tmp/input').toString()
     expect(content.trim()).to.eq('World')
   })
-})
 
-describe('Submission Scenario Dir structure', () => {
   it('should setup', async () => {
     const source = 'print("Hello World")'
 
