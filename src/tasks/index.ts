@@ -5,11 +5,11 @@ import * as path from 'path'
 
 import RunScenario from './run'
 import SubmissionScenario from './submission'
-import { RunJob, SubmitJob } from "./job";
+import { RunJob, SubmitJob, Job } from "./job";
 
 export function execute(job: RunJob): Promise<RunResult>
 export function execute(job: SubmitJob): Promise<SubmissionResult>
-export async function execute (job) {
+export async function execute (job: Job) {
   // Create RUNBOX
   rm('-rf', config.RUNBOX.DIR)
   mkdir('-p', config.RUNBOX.DIR)

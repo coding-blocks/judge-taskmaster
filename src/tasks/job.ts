@@ -1,18 +1,18 @@
-type JobConstructorOpts = {
+interface JobConstructorOpts {
   id: number
   source: string
   lang: string
   timelimit?: number
 } 
-type RunJobConstructorOpts = JobConstructorOpts & {
+interface RunJobConstructorOpts extends JobConstructorOpts {
   stdin: string
 }
-type TestcaseOpts = {
+interface TestcaseOpts {
   id: number, 
   input: string, 
   output: string
 }
-type SubmitJobConstructorOpts = JobConstructorOpts & {
+interface SubmitJobConstructorOpts extends JobConstructorOpts {
   testcases: Array<TestcaseOpts>
 }
 

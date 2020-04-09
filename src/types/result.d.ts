@@ -1,21 +1,21 @@
-export type Result = {
+export interface Result {
   id: number,
   stderr: string
 }
 
-export type TestcaseResult = { 
+export interface TestcaseResult { 
   id: number, 
   score: number, 
   time: string, 
   result: string 
 }
 
-export type RunResult = Result & {
+export interface RunResult extends Result {
   stdout: string,
   time: number,
   code: number
 }
 
-export type SubmissionResult = Result & {
+export interface SubmissionResult extends Result {
   testcases: Array<TestcaseResult>
 }
