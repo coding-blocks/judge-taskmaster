@@ -5,7 +5,7 @@ import { mkdir, rm } from 'shelljs'
 import config = require('../config.js')
 import * as path from 'path'
 import SubmissionScenario from '../src/tasks/submission'
-import { SubmissionJob } from '../src/types/job'
+import { SubmitJob } from '../src/tasks/job'
 
 describe('Submission Scenario', () => {
   it('should download', async () => {
@@ -20,15 +20,15 @@ describe('Submission Scenario', () => {
   it('should setup', async () => {
     const source = 'print("Hello World")'
 
-    const job: SubmissionJob = {
+    const job: SubmitJob = {
       id: 1,
       source: (new Buffer(source)).toString('base64'),
       lang: 'py3',
       timelimit: 5,
-      testcases: [{ 
-        id: 122, 
-        input: 'https://minio.cb.lk/public/input', 
-        output: 'https://minio.cb.lk/public/output' 
+      testcases: [{
+        id: 122,
+        input: 'https://minio.cb.lk/public/input',
+        output: 'https://minio.cb.lk/public/output'
       }]
     }
 
