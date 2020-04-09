@@ -3,21 +3,15 @@ import { expect } from 'chai'
 import { SubmitJob } from '../../src/tasks/job'
 import { SubmissionResult } from '../../src/types/result'
 
-describe('submit - cpp', () => {
-  it('.cpp file submits correctly', async () => {
+describe('submit - ruby', () => {
+  it('.rb file submits correctly (ruby)', async () => {
     const source = `
-      #include <iostream>
-      using namespace std;
-      int main () {
-          char in[10];
-          cin>>in;
-          cout<<"Hello "<<in;
-          return 0;
-      }`
+    puts "Hello " + gets.to_s
+  `
 
     const submitResult = await execute(new SubmitJob({
       id: 1,
-      lang: 'cpp',
+      lang: 'ruby',
       source: (new Buffer(source)).toString('base64'),
       testcases: [{
         id: 1,
