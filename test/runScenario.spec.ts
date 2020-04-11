@@ -3,7 +3,7 @@ import { mkdir, rm } from 'shelljs'
 import RunScenario from '../src/tasks/run'
 import config = require('../config.js')
 import * as path from 'path'
-import { RunJob } from '../src/types/job'
+import { RunJob } from '../src/tasks/job'
 import * as fs from 'fs'
 
 describe('Run Scenario', () => {

@@ -10,7 +10,7 @@ import { RunJob, SubmitJob, Job } from "./job";
 export function execute(job: RunJob): Promise<RunResult>
 export function execute(job: SubmitJob): Promise<SubmissionResult>
 export async function execute (job: Job) {
-  // Create RUNBOX
+  // Create RUNBOX  
   rm('-rf', config.RUNBOX.DIR)
   mkdir('-p', config.RUNBOX.DIR)
   const currentJobDir = path.join(config.RUNBOX.DIR, job.id.toString())

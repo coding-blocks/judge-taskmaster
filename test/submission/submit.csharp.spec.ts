@@ -3,21 +3,19 @@ import { expect } from 'chai'
 import { SubmitJob } from '../../src/tasks/job'
 import { SubmissionResult } from '../../src/types/result'
 
-describe('submit - cpp', () => {
-  it('.cpp file submits correctly', async () => {
+describe('submit - csharp', () => {
+  it('.cs file submits correctly', async () => {
     const source = `
-      #include <iostream>
-      using namespace std;
-      int main () {
-          char in[10];
-          cin>>in;
-          cout<<"Hello "<<in;
-          return 0;
-      }`
-
+    using System;
+    public class HelloWorld {
+      static public void Main () {
+        Console.WriteLine ("Hello " + Console.ReadLine());
+      }
+    }
+    `
     const submitResult = await execute(new SubmitJob({
       id: 1,
-      lang: 'cpp',
+      lang: 'csharp',
       source: (new Buffer(source)).toString('base64'),
       testcases: [{
         id: 1,
@@ -28,9 +26,9 @@ describe('submit - cpp', () => {
 
     console.log(submitResult)
 
-    // assertions
+    //assertion
     expect(submitResult.testcases[0].result).to.eq('Success')
     expect(submitResult.testcases[0].score).to.eq(100)
+
   })
 })
-

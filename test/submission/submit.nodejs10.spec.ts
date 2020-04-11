@@ -3,21 +3,23 @@ import { expect } from 'chai'
 import { SubmitJob } from '../../src/tasks/job'
 import { SubmissionResult } from '../../src/types/result'
 
-describe('submit - cpp', () => {
-  it('.cpp file submits correctly', async () => {
+describe('submit - nodejs10', () => {
+  it('.js file submits correctly (nodejs10)', async () => {
     const source = `
-      #include <iostream>
-      using namespace std;
-      int main () {
-          char in[10];
-          cin>>in;
-          cout<<"Hello "<<in;
-          return 0;
-      }`
+    const readline = require('readline');
+    const rl = readline.createInterface({
+      input: process.stdin,
+      output: process.stdout,
+      terminal: false
+    });
+    rl.on('line', function (line) {
+      console.log("Hello " + line);
+    })
+  `
 
     const submitResult = await execute(new SubmitJob({
       id: 1,
-      lang: 'cpp',
+      lang: 'nodejs10',
       source: (new Buffer(source)).toString('base64'),
       testcases: [{
         id: 1,

@@ -3,21 +3,22 @@ import { expect } from 'chai'
 import { SubmitJob } from '../../src/tasks/job'
 import { SubmissionResult } from '../../src/types/result'
 
-describe('submit - cpp', () => {
-  it('.cpp file submits correctly', async () => {
+describe('submit - java8', () => {
+  it('.java file submits correctly (java8)', async () => {
     const source = `
-      #include <iostream>
-      using namespace std;
-      int main () {
-          char in[10];
-          cin>>in;
-          cout<<"Hello "<<in;
-          return 0;
-      }`
+    import java.util.Scanner;
+    public class Main {
+      public static void main(String[] args) {
+        Scanner in = new Scanner(System.in);
+        String input = in.next();
+        System.out.println("Hello " + input);
+      }
+    }
+  `
 
     const submitResult = await execute(new SubmitJob({
       id: 1,
-      lang: 'cpp',
+      lang: 'java8',
       source: (new Buffer(source)).toString('base64'),
       testcases: [{
         id: 1,
