@@ -38,7 +38,7 @@
   "scripts": {
     "build": "tsc",
     "prestart": "npm run build",
-    "start": "./wait-for-it.sh ${AMQP_HOST}:${AMQP_PORT} -- node dist/taskmaster.js",
+    "start": "NODE_PATH=dist ./wait-for-it.sh ${AMQP_HOST}:${AMQP_PORT} -- node dist/taskmaster.js",
     "dev": "NODE_PATH=dist nodemon dist/taskmaster.js",
     "test": "docker build . -t codingblocks/judge-taskmaster && mocha --timeout 10000 --exit --require ts-node/register test/**/*.ts",
     "test.parallel": "mocha-parallel-tests --timeout 10000 --exit --require ts-node/register test/**/*.ts",
