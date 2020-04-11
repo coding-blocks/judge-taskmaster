@@ -26,15 +26,17 @@ amqp.connect(`amqp://${config.AMQP.USER}:${config.AMQP.PASS}@${config.AMQP.HOST}
     channel.assertQueue(jobQ);
     channel.consume(jobQ, async (msg) => {
       try {
-        const payload = JSON.parse(msg.content.toString())
+        const payload = JSON.parse(msg.content.toString())      
+
         let job
         if (payload.testcases) {
           job = new SubmitJob(payload)
         } else {
           job = new RunJob(payload)
         }
+                
         const jobResult = await execute(job)
-        
+      
         // TODO
         channel.sendToQueue(successQ, (new Buffer(JSON.stringify(jobResult))))
         channel.ack(msg)
