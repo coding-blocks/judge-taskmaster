@@ -5,6 +5,7 @@ import {Connection} from 'amqplib/callback_api'
 import { execute } from './tasks'
 import config = require('../config.js')
 import { SubmitJob, RunJob } from 'tasks/job';
+import { mkdir } from 'shelljs'
 
 // =============== Setup Raven
 Raven.config(config.SENTRY.DSN, {
@@ -16,6 +17,8 @@ Raven.config(config.SENTRY.DSN, {
 
 let jobQ = 'job_queue'
 let successQ = 'success_queue'
+
+mkdir('-p', config.RUNBOX.DIR)
 
 amqp.connect(`amqp://${config.AMQP.USER}:${config.AMQP.PASS}@${config.AMQP.HOST}:${config.AMQP.PORT}`, (err, connection: Connection) => {
   if (err) throw err
