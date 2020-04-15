@@ -61,22 +61,24 @@ class SubmissionScenario implements Scenario {
       const runOutputFile = path.join(currentTestcasePath, 'run.stdout')
       const expectedOutputFile = path.join(currentTestcasePath, 'stdout')
 
+      const diff = exec(`
+        diff -b -a ${runOutputFile} ${expectedOutputFile}
+      `)
+      const score = diff.code === 0 ? 100 : 0
+
       const result = new Array(
         +code === 143 && "TLE",
         +code === 137 && "MLE",
         +code !== 0 && "Run Error",
+        +code === 0 && score === 0 && "Wrong Answer",
         +code === 0 && "Success"
       ).reduce((acc, cur) => acc || cur)
-      
-      const diff = exec(`
-        diff -b -a ${runOutputFile} ${expectedOutputFile}
-      `)
 
       return {
         id: +testcase,
         time,
         result,
-        score: diff.code === 0 ? 100 : 0
+        score
       }
     })
 
