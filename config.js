@@ -18,6 +18,11 @@ exports = module.exports = {
       CPU_SHARE: '1.2',
       MEM_LIMIT: '500m',
     },
+    'java': {
+      SOURCE_FILE: 'Main.java',
+      CPU_SHARE: '1.2',
+      MEM_LIMIT: '500m',
+    },
     'cpp': {
       SOURCE_FILE: 'source.cpp',
       CPU_SHARE: "0.8",
