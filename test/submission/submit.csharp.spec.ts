@@ -14,17 +14,16 @@ describe('submit - csharp', () => {
     }
     `
     const submitResult = await execute(new SubmitJob({
-      id: 1,
+      id: 3,
       lang: 'csharp',
       source: (new Buffer(source)).toString('base64'),
+      scenario: 'submit',
       testcases: [{
         id: 1,
         input: 'https://minio.cb.lk/public/input',
         output: 'https://minio.cb.lk/public/output'
       }]
     }))
-
-    console.log(submitResult)
 
     //assertion
     expect(submitResult.testcases[0].result).to.eq('Success')

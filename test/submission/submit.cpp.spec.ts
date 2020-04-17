@@ -19,6 +19,7 @@ describe('submit - cpp', () => {
       id: 1,
       lang: 'cpp',
       source: (new Buffer(source)).toString('base64'),
+      scenario: 'submit',
       testcases: [{
         id: 1,
         input: 'https://minio.cb.lk/public/input',
@@ -26,11 +27,29 @@ describe('submit - cpp', () => {
       }]
     }))
 
-    console.log(submitResult)
-
     // assertions
     expect(submitResult.testcases[0].result).to.eq('Success')
     expect(submitResult.testcases[0].score).to.eq(100)
+  })
+
+  it('.cpp files generates errors', async () => {
+    const source = `
+      #include <iostream>
+      using namespace std;
+      int main () {`    
+    const submitResult = await execute(new SubmitJob({
+      id: 2,
+      lang: 'cpp',
+      source: (new Buffer(source)).toString('base64'),
+      scenario: 'submit',
+      testcases: [{
+        id: 1,
+        input: 'https://minio.cb.lk/public/input',
+        output: 'https://minio.cb.lk/public/output'
+      }]
+    }))
+
+    expect(submitResult.stderr).to.not.eq('')
   })
 })
 

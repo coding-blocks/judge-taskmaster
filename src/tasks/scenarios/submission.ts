@@ -1,11 +1,11 @@
-import config = require('../../config.js')
+import config = require('../../../config.js')
 import { cat, ls, mkdir, exec } from 'shelljs'
-import { SubmitJob } from './job'
+import { SubmitJob } from '../job'
 import { SubmissionResult } from 'types/result'
 import * as path from 'path'
 import * as fs from 'fs'
 import * as https from 'https'
-import { Scenario } from 'types/scenario.js'
+import { Scenario } from '../scenario'
 import { ClientRequest } from 'http';
 
 export const download = (url: string, dest: string): Promise<ClientRequest> => {
@@ -22,7 +22,7 @@ export const download = (url: string, dest: string): Promise<ClientRequest> => {
   )
 }
 
-class SubmissionScenario implements Scenario {
+class SubmissionScenario extends Scenario {
   setup(currentJobDir: string, job: SubmitJob) {
     const LANG_CONFIG = config.LANGS[job.lang]
 
@@ -39,13 +39,13 @@ class SubmissionScenario implements Scenario {
     }))
   }
 
-  async result(currentJobDir: string, jobId: number): Promise<SubmissionResult> {
+  async result(currentJobDir: string, job: SubmitJob): Promise<SubmissionResult> {
     // Check for compile_stderr if can't find a stdout file ; stdout can be ''
     const compile_stderr = cat(path.join(currentJobDir, 'compile.stderr')).toString()
 
     if (compile_stderr) {
       return {
-        id: jobId,
+        id: job.id,
         stderr: (new Buffer(compile_stderr)).toString('base64'),
         testcases: []
       }
@@ -83,7 +83,7 @@ class SubmissionScenario implements Scenario {
     })
 
     return {
-      id: jobId,
+      id: job.id,
       stderr: (new Buffer(compile_stderr)).toString('base64'),
       testcases
     }

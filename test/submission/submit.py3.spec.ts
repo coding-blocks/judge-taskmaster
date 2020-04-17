@@ -11,17 +11,16 @@ print("Hello " + inp)
   `
 
     const submitResult = await execute(new SubmitJob({
-      id: 1,
+      id: 8,
       lang: 'py3',
       source: (new Buffer(source)).toString('base64'),
+      scenario: 'submit',
       testcases: [{
         id: 1,
         input: 'https://minio.cb.lk/public/input',
         output: 'https://minio.cb.lk/public/output'
       }]
     }))
-
-    console.log(submitResult)
 
     // assertions
     expect(submitResult.testcases[0].result).to.eq('Success')

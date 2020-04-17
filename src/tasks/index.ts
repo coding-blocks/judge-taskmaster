@@ -3,8 +3,8 @@ import config = require('../../config.js')
 import {exec, mkdir, rm} from 'shelljs'
 import * as path from 'path'
 
-import RunScenario from './run'
-import SubmissionScenario from './submission'
+import RunScenario from './scenarios/run'
+import SubmissionScenario from './scenarios/submission'
 import { RunJob, SubmitJob, Job } from "./job";
 
 export function execute(job: RunJob): Promise<RunResult>
@@ -14,8 +14,6 @@ export async function execute (job: Job) {
   const currentJobDir = path.join(config.RUNBOX.DIR, job.id.toString())
   mkdir('-p', currentJobDir)
 
-  const LANG_CONFIG = config.LANGS[job.lang]
-
   let scenario
   if (job instanceof RunJob) {
     scenario = RunScenario
@@ -24,22 +22,13 @@ export async function execute (job: Job) {
   }
 
   // Setup RUNBOX
-  await scenario.setup(currentJobDir, job) // TODO:
+  await scenario.setup(currentJobDir, job) 
 
   // Run worker
-  exec(`docker run \\
-    --cpus="${LANG_CONFIG.CPU_SHARE}" \\
-    --memory="${LANG_CONFIG.MEM_LIMIT}" \\
-    --ulimit nofile=64:64 \\
-    --rm \\
-    -v "${currentJobDir}":/usr/src/runbox \\
-    -w /usr/src/runbox \\
-    codingblocks/judge-worker-${job.lang} \\
-    /bin/judge.sh -t ${job.timelimit || 5} 
-  `)
+  await scenario.run(currentJobDir, job)
 
   // Get result
-  const result = await scenario.result(currentJobDir, job.id)
+  const result = await scenario.result(currentJobDir, job)
 
   rm('-rf', currentJobDir)
 

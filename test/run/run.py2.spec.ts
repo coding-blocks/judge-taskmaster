@@ -11,6 +11,7 @@ describe('run - py2', () => {
 inp = raw_input()
 print("Hello " + inp)
       `)).toString('base64'),
+      scenario: 'run',
       stdin: (new Buffer('World')).toString('base64')
     }))
     expect(new Buffer(runResult.stdout, 'base64').toString('ascii')).to.eq('Hello World\n')

@@ -32,10 +32,15 @@ amqp.connect(`amqp://${config.AMQP.USER}:${config.AMQP.PASS}@${config.AMQP.HOST}
         const payload = JSON.parse(msg.content.toString())      
 
         let job
-        if (payload.testcases) {
-          job = new SubmitJob(payload)
-        } else {
-          job = new RunJob(payload)
+        switch (payload.scenario) {
+          case 'submit':
+            job = new SubmitJob(payload)
+            break
+          case 'run':
+            job = new RunJob(payload)
+            break
+          default:
+            throw new Error("Scenario not declared")
         }
                 
         const jobResult = await execute(job)

@@ -1,9 +1,9 @@
 import { expect } from 'chai'
 import { mkdir, rm } from 'shelljs'
-import RunScenario from '../src/tasks/run'
-import config = require('../config.js')
+import RunScenario from '../../src/tasks/scenarios/run'
+import config = require('../../config.js')
 import * as path from 'path'
-import { RunJob } from '../src/tasks/job'
+import { RunJob } from '../../src/tasks/job'
 import * as fs from 'fs'
 
 describe('Run Scenario', () => {
@@ -16,6 +16,7 @@ describe('Run Scenario', () => {
       source: (new Buffer(source)).toString('base64'),
       lang: 'py3',
       timelimit: 5,
+      scenario: 'run',
       stdin: (new Buffer(stdin)).toString('base64'),
     }
 

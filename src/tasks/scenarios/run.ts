@@ -1,12 +1,12 @@
-import config = require('../../config.js')
+import config = require('../../../config.js')
 import {cat, exec, mkdir, rm, touch, head} from 'shelljs'
-import { RunJob } from './job'
+import { RunJob } from '../job'
 import { RunResult } from 'types/result'
 import * as path from 'path'
 import * as fs from 'fs'
-import { Scenario } from 'types/scenario'
+import { Scenario } from '../scenario'
 
-class RunScenario implements Scenario {
+class RunScenario extends Scenario {
   setup(currentJobDir: string, job: RunJob) {
     const LANG_CONFIG = config.LANGS[job.lang]
 
@@ -16,7 +16,7 @@ class RunScenario implements Scenario {
       (new Buffer(job.stdin, 'base64')).toString('ascii'))    
   }
 
-  async result(currentJobDir: string, jobId: number): Promise<RunResult> {
+  async result(currentJobDir: string, job: RunJob): Promise<RunResult> {
     const stdout = exec(`
       head -c ${config.MAX_OUTPUT_BUFFER} ${path.join(currentJobDir, 'run.stdout')}
     `)
@@ -29,7 +29,7 @@ class RunScenario implements Scenario {
     const code = cat(path.join(currentJobDir, 'runguard.code')).toString()
 
     return {
-      id: jobId,
+      id: job.id,
       stderr: (new Buffer(stderr)).toString('base64'),
       stdout: (new Buffer(stdout)).toString('base64'),
       time: +run_time,

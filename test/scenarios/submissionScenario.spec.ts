@@ -1,11 +1,10 @@
 import { expect } from 'chai'
-import { download } from '../src/tasks/submission'
 import * as fs from 'fs'
 import { mkdir, rm } from 'shelljs'
-import config = require('../config.js')
+import config = require('../../config.js')
 import * as path from 'path'
-import SubmissionScenario from '../src/tasks/submission'
-import { SubmitJob } from '../src/tasks/job'
+import SubmissionScenario, { download } from '../../src/tasks/scenarios/submission'
+import { SubmitJob } from '../../src/tasks/job'
 
 describe('Submission Scenario', () => {
   it('should download', async () => {
@@ -25,6 +24,7 @@ describe('Submission Scenario', () => {
       source: (new Buffer(source)).toString('base64'),
       lang: 'py3',
       timelimit: 5,
+      scenario: 'submit',
       testcases: [{
         id: 122,
         input: 'https://minio.cb.lk/public/input',

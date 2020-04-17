@@ -19,14 +19,13 @@ describe('submit - c', () => {
       id: 1,
       lang: 'c',
       source: (new Buffer(source)).toString('base64'),
+      scenario: 'submit',
       testcases: [{
         id: 1,
         input: 'https://minio.cb.lk/public/input',
         output: 'https://minio.cb.lk/public/output'
       }]
     }))
-
-    console.log(submitResult)
 
     // assertions
     expect(submitResult.testcases[0].result).to.eq('Success')
