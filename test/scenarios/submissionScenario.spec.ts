@@ -43,8 +43,8 @@ describe('Submission Scenario', () => {
     const stdin = fs.readFileSync(path.join(currentJobDir, 'testcases', '' + job.testcases[0].id, 'stdin')).toString()
     expect(stdin.trim()).to.eq('World')
 
-    const stdout = fs.readFileSync(path.join(currentJobDir, 'testcases', '' + job.testcases[0].id, 'stdout')).toString()
-    expect(stdout.trim()).to.eq('Hello World')
+    const stdout = () => fs.readFileSync(path.join(currentJobDir, 'testcases', '' + job.testcases[0].id, 'stdout')).toString()
+    expect(stdout).to.throw()
 
   })
 })

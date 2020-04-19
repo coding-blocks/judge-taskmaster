@@ -15,8 +15,9 @@ Raven.config(config.SENTRY.DSN, {
 }).install()
 // =============== Setup Raven
 
-let jobQ = 'job_queue'
-let successQ = 'success_queue'
+const jobQ = 'job_queue'
+const successQ = 'success_queue'
+const errorQ = 'error_queue'
 
 mkdir('-p', config.RUNBOX.DIR)
 
@@ -27,6 +28,7 @@ amqp.connect(`amqp://${config.AMQP.USER}:${config.AMQP.PASS}@${config.AMQP.HOST}
 
     channel.assertQueue(successQ);
     channel.assertQueue(jobQ);
+    channel.assertQueue(errorQ);
     channel.consume(jobQ, async (msg) => {
       try {
         const payload = JSON.parse(msg.content.toString())      
@@ -45,11 +47,10 @@ amqp.connect(`amqp://${config.AMQP.USER}:${config.AMQP.PASS}@${config.AMQP.HOST}
                 
         const jobResult = await execute(job)
       
-        // TODO
-        channel.sendToQueue(successQ, (new Buffer(JSON.stringify(jobResult))))
-        
+        channel.sendToQueue(successQ, (new Buffer(JSON.stringify(jobResult))))  
       } catch (err) {
         Raven.captureException(err);
+        channel.sendToQueue(errorQ, (new Buffer(msg.content)))
       }
       channel.ack(msg)
     })

@@ -31,11 +31,10 @@ class SubmissionScenario extends Scenario {
     const testCasesDir = path.join(currentJobDir, 'testcases')
     mkdir('-p', testCasesDir)
 
-    return Promise.all(job.testcases.map(async testcase => {
+    return Promise.all(job.testcases.map(testcase => {
       const rootDir = path.join(testCasesDir, '' + testcase.id)
       mkdir('-p', rootDir)      
-      const input = await download(testcase.input, path.join(rootDir, 'stdin'))
-      const output = await download(testcase.output, path.join(rootDir, 'stdout'))
+      return download(testcase.input, path.join(rootDir, 'stdin'))
     }))
   }
 
@@ -50,6 +49,11 @@ class SubmissionScenario extends Scenario {
         testcases: []
       }
     }
+
+    await Promise.all(job.testcases.map(async testcase => {
+      const rootDir = path.join(currentJobDir, 'testcases', '' + testcase.id)
+      return download(testcase.output, path.join(rootDir, 'stdout'))
+    }))
 
     const testcases = ls(path.join(currentJobDir, 'testcases')).map(testcase => {
       const currentTestcasePath = path.join(currentJobDir, 'testcases', testcase)
