@@ -1,28 +1,13 @@
 import config = require('../../../config.js')
 import { cat, ls, mkdir, exec } from 'shelljs'
-import { SubmitJob } from '../job'
+import { SubmitJob } from 'tasks/job'
 import { SubmissionResult } from 'types/result'
 import * as path from 'path'
 import * as fs from 'fs'
-import * as https from 'https'
-import { Scenario } from '../scenario'
-import { ClientRequest } from 'http';
+import { Scenario } from 'tasks/scenario'
+import { download } from 'utils/request'
 
-export const download = (url: string, dest: string): Promise<ClientRequest> => {
-  const file = fs.createWriteStream(dest);
-  return new Promise((resolve, reject) =>
-    https.get(url, function (response) {
-      response.pipe(file);
-      file.on('finish', function () {
-        resolve()
-      });
-    }).on('error', err => {
-      reject(err)
-    })
-  )
-}
-
-class SubmissionScenario extends Scenario {
+export default class SubmissionScenario extends Scenario {
   setup(currentJobDir: string, job: SubmitJob) {
     const LANG_CONFIG = config.LANGS[job.lang]
 
@@ -93,5 +78,3 @@ class SubmissionScenario extends Scenario {
     }
   }
 }
-
-export default new SubmissionScenario()

@@ -16,9 +16,9 @@ export async function execute (job: Job) {
 
   let scenario
   if (job instanceof RunJob) {
-    scenario = RunScenario
+    scenario = new RunScenario()
   } else if (job instanceof SubmitJob) {
-    scenario = SubmissionScenario
+    scenario = new SubmissionScenario()
   }
 
   // Setup RUNBOX

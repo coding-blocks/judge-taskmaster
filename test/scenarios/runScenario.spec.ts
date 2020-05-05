@@ -26,7 +26,7 @@ describe('Run Scenario', () => {
     const currentJobDir = path.join(config.RUNBOX.DIR, job.id.toString())
     mkdir('-p', currentJobDir)
 
-    await RunScenario.setup(currentJobDir, job)
+    await (new RunScenario()).setup(currentJobDir, job)
 
     // assertions
     const outputSource = fs.readFileSync(path.join(currentJobDir, LANG_CONFIG.SOURCE_FILE)).toString()
