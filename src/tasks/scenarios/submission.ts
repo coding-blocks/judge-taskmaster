@@ -66,7 +66,7 @@ class SubmissionScenario extends Scenario {
       const expectedOutputFile = path.join(currentTestcasePath, 'stdout')
 
       const diff = exec(`
-        diff -b -a ${runOutputFile} ${expectedOutputFile}
+        diff -b -B -a ${runOutputFile} ${expectedOutputFile}
       `)
       const score = diff.code === 0 ? 100 : 0
 
