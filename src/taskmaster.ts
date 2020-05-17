@@ -22,9 +22,16 @@ const errorQ = 'error_queue'
 mkdir('-p', config.RUNBOX.DIR)
 
 amqp.connect(`amqp://${config.AMQP.USER}:${config.AMQP.PASS}@${config.AMQP.HOST}:${config.AMQP.PORT}`, (err, connection: Connection) => {
-  if (err) throw err
+  if (err) {
+    Raven.captureException(err);
+    return;
+  }
 
   connection.createChannel((err2, channel) => {
+    if (err2) {
+      Raven.captureException(err2);
+      return;
+    }
 
     channel.assertQueue(successQ);
     channel.assertQueue(jobQ);
