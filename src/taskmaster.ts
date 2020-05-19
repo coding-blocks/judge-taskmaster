@@ -24,13 +24,13 @@ mkdir('-p', config.RUNBOX.DIR)
 amqp.connect(`amqp://${config.AMQP.USER}:${config.AMQP.PASS}@${config.AMQP.HOST}:${config.AMQP.PORT}`, (err, connection: Connection) => {
   if (err) {
     Raven.captureException(err);
-    return;
+    throw err
   }
 
   connection.createChannel((err2, channel) => {
     if (err2) {
       Raven.captureException(err2);
-      return;
+      throw err2
     }
 
     channel.assertQueue(successQ);
@@ -38,7 +38,7 @@ amqp.connect(`amqp://${config.AMQP.USER}:${config.AMQP.PASS}@${config.AMQP.HOST}
     channel.assertQueue(errorQ);
 
     channel.prefetch(1);
-    
+
     channel.consume(jobQ, async (msg) => {
       try {
         const payload = JSON.parse(msg.content.toString())      
