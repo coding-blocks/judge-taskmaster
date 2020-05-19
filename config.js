@@ -78,5 +78,10 @@ exports = module.exports = {
       CPU_SHARE: "0.8",
       MEM_LIMIT: '500m',
     },
+    'kotlin': {
+      SOURCE_FILE: 'Main.kt',
+      CPU_SHARE: "1.2",
+      MEM_LIMIT: '500m',
+    }
   }
 }
