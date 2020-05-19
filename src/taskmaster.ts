@@ -36,6 +36,9 @@ amqp.connect(`amqp://${config.AMQP.USER}:${config.AMQP.PASS}@${config.AMQP.HOST}
     channel.assertQueue(successQ);
     channel.assertQueue(jobQ);
     channel.assertQueue(errorQ);
+
+    channel.prefetch(1);
+    
     channel.consume(jobQ, async (msg) => {
       try {
         const payload = JSON.parse(msg.content.toString())      
