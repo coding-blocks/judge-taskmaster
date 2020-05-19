@@ -9,7 +9,7 @@
     "@types/amqplib": "^0.5.4",
     "@types/chai": "^4.0.4",
     "@types/mocha": "^5.0.0",
-    "@types/node": "10",
+    "@types/node": "^14.0.2",
     "@types/shelljs": "^0.8.3",
     "chai": "^4.1.2",
     "mocha": "^5.0.4",
