@@ -2,7 +2,7 @@ interface JobConstructorOpts {
   id: number
   source: string
   lang: string
-  scenario: "run" | "submit"
+  scenario: "run" | "submit" |"project"
   timelimit?: number
 } 
 interface RunJobConstructorOpts extends JobConstructorOpts {
@@ -16,6 +16,11 @@ interface TestcaseOpts {
 interface SubmitJobConstructorOpts extends JobConstructorOpts {
   testcases: Array<TestcaseOpts>
 }
+interface ProjectConstructorOpts extends JobConstructorOpts {
+  problem: string
+  problem : submissionDirs
+}
+
 
 export class Job { 
   id: number
@@ -48,5 +53,14 @@ export class SubmitJob extends Job {
   constructor({ id, source, lang, timelimit, scenario, testcases }: SubmitJobConstructorOpts) {
     super({id, source, lang, timelimit, scenario})
     this.testcases = testcases
+  }
+}
+export class ProjectJob extends Job {
+  problem: string
+  problem: submissionDirs
+
+  constructor({ id, source, lang, timelimit, scenario, problem}: ProjectConstructorOpts) {
+    super({ id, source, lang, timelimit, scenario})
+    this.problem = problem
   }
 }
