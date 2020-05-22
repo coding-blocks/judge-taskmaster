@@ -18,7 +18,8 @@ interface SubmitJobConstructorOpts extends JobConstructorOpts {
 }
 
 interface ProjectConstructorOpts extends JobConstructorOpts {
-  problem: string
+  problem: string,
+  submissionDirs: string
 }
 
 export class Job { 
@@ -57,9 +58,11 @@ export class SubmitJob extends Job {
 
 export class ProjectJob extends Job {
   problem: string
+  submissionDirs: string
 
-  constructor({ id, source, lang, timelimit, scenario, problem}: ProjectConstructorOpts) {
+  constructor({ id, source, lang, timelimit, scenario, problem, submissionDirs}: ProjectConstructorOpts) {
     super({ id, source, lang, timelimit, scenario})
     this.problem = problem
+    this.submissionDirs = submissionDirs
   }
 }
