@@ -25,7 +25,7 @@ export default class ProjectScenario extends Scenario {
 
   run(currentJobDir: string, job: ProjectJob) {
 
-    // LANG_CONFIG is undefined rn
+    // LANG_CONFIG is undefined rn, hence card coding the value of cpus and memory
     const LANG_CONFIG = config.LANGS[job.lang]
     return exec(`docker run \\
         --cpus="1" \\
@@ -33,7 +33,7 @@ export default class ProjectScenario extends Scenario {
         --rm \\
         -v "${currentJobDir}":/usr/src/runbox \\
         -w /usr/src/runbox codingblocks/project-worker-"${job.lang}" \\
-        /bin/judge.sh -s "${job.submissionDirs}
+        /bin/judge.sh -s "${job.submissionDirs}"
     `);
   }
 
@@ -53,12 +53,10 @@ export default class ProjectScenario extends Scenario {
     }
 
     const build_stderr = cat(path.join(currentJobDir, 'build.stderr')).toString()
-    const stderr = build_stderr || cat((path.join(currentJobDir, 'run.stderr')).toString())
-
-    if (stderr) {
+    if (build_stderr) {
       return {
         id: job.id,
-        stderr,
+        stderr: build_stderr,
         stdout: '',
         code: 12123,
         time: 1,
@@ -66,15 +64,16 @@ export default class ProjectScenario extends Scenario {
       }
     }
 
-    const build_stdout = cat(path.join(currentJobDir, 'build.stdout')).toString()
-    const stdout = build_stdout || cat(path.join(currentJobDir, 'run.stdout')).toString()
+    const stderr = cat((path.join(currentJobDir, 'run.stderr')).toString())
+    const run_stdout = cat(path.join(currentJobDir, 'run.stdout')).toString()
 
+    // if code is set to 0, change the condition in judge-api queue logic
     return {
       id: job.id,
-      stderr: '',
-      stdout: stdout,
+      stderr: stderr,
+      stdout: run_stdout,
       time: 0,
-      code: 10,
+      code: 100,
       score: 100
     }
   }
