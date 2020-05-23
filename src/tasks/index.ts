@@ -5,8 +5,11 @@ import * as path from 'path'
 
 import RunScenario from './scenarios/run'
 import SubmissionScenario from './scenarios/submission'
-import ProjectScenario from './scenarios/project';
-import { RunJob, SubmitJob, ProjectJob, Job } from "./job";
+import ProjectScenario from './scenarios/project'
+import {Job } from './job'
+import {RunJob} from './jobs/run'
+import {SubmitJob} from './jobs/submission';
+import {ProjectJob} from './jobs/project';
 
 export function execute(job: RunJob): Promise<RunResult>
 export function execute(job: SubmitJob): Promise<SubmissionResult>

@@ -1,6 +1,6 @@
 import config = require('../../../config.js')
-import {cat, exec, mkdir, rm, touch, head} from 'shelljs'
-import {ProjectJob} from 'tasks/job'
+import { cat, exec, mkdir, rm, touch, head } from 'shelljs'
+import { ProjectJob } from '../jobs/project'
 import { ProjectResult } from 'types/result'
 import * as path from 'path'
 import { Scenario } from 'tasks/scenario'
