@@ -5,35 +5,41 @@ import { ProjectResult } from 'types/result'
 import * as path from 'path'
 import { Scenario } from 'tasks/scenario'
 import { download } from 'utils/request'
+const AdmZip = require('adm-zip')
 
 export default class ProjectScenario extends Scenario {
   async setup(currentJobDir: string, job: ProjectJob) {
-    // check this. directory might be wrong
+
+    // for testing only, change it to download
+    var problemZip = new AdmZip('/judge-worker-prabal/current/problem.zip')
+    var solutionZip = new AdmZip('/judge-worker-prabal/current/solution.zip')
+
     const problemDir = path.join(currentJobDir, 'problem')
     mkdir('-p', problemDir)
-    await download(job.problem, path.join(problemDir, 'problem'))
+    problemZip.extractAllTo(problemDir, true);
 
     const solutionDir = path.join(currentJobDir, 'solution')
     mkdir('-p', solutionDir)
-    await download(job.source, path.join(solutionDir, 'solution'))
+    solutionZip.extractAllTo(solutionDir, true);
   }
 
   run(currentJobDir: string, job: ProjectJob) {
+
+    // LANG_CONFIG is undefined rn
     const LANG_CONFIG = config.LANGS[job.lang]
     return exec(`docker run \\
-        --cpus="${LANG_CONFIG.CPU_SHARE}" \\
-        --memory="${LANG_CONFIG.MEM_LIMIT}" \\
+        --cpus="1" \\
+        --memory="100m" \\
         --rm \\
         -v "${currentJobDir}":/usr/src/runbox \\
         -w /usr/src/runbox codingblocks/project-worker-"${job.lang}" \\
-        /bin/judge.sh -s "${job.submissionDirs}"
+        /bin/judge.sh -s "${job.submissionDirs}
     `);
   }
 
   async result(currentJobDir: string, job: ProjectJob): Promise<ProjectResult> {
 
     const result_code = cat(path.join(currentJobDir, 'result.code')).toString()
-
     if (result_code) {
       // problem hash and solution hash were not equal. // error
       return {
@@ -42,7 +48,7 @@ export default class ProjectScenario extends Scenario {
         stdout: '',
         code: parseInt(result_code),
         time: 1,
-        score: 0
+        score: 12
       }
     }
 
@@ -52,11 +58,11 @@ export default class ProjectScenario extends Scenario {
     if (stderr) {
       return {
         id: job.id,
-        stderr: build_stderr,
+        stderr,
         stdout: '',
         code: 12123,
         time: 1,
-        score: 0
+        score: 100
       }
     }
 
@@ -68,8 +74,8 @@ export default class ProjectScenario extends Scenario {
       stderr: '',
       stdout: stdout,
       time: 0,
-      code: 0,
-      score: 0
+      code: 10,
+      score: 100
     }
   }
 }
