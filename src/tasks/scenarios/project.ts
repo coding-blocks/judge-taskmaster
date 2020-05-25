@@ -5,31 +5,28 @@ import { ProjectResult } from 'types/result'
 import * as path from 'path'
 import { Scenario } from 'tasks/scenario'
 import { download } from 'utils/request'
-const AdmZip = require('adm-zip')
 
 export default class ProjectScenario extends Scenario {
   async setup(currentJobDir: string, job: ProjectJob) {
-
-    // for testing only, change it to download
-    var problemZip = new AdmZip('/judge-worker-prabal/current/problem.zip')
-    var solutionZip = new AdmZip('/judge-worker-prabal/current/solution.zip')
+    const problemZipDir = path.join(currentJobDir, 'problem.zip')
+    const solutionZipDir = path.join(currentJobDir, 'solution.zip')
+    await download(job.problem, problemZipDir)
+    await download(job.source, solutionZipDir)
 
     const problemDir = path.join(currentJobDir, 'problem')
     mkdir('-p', problemDir)
-    problemZip.extractAllTo(problemDir, true);
+    exec(`unzip ${problemZipDir} -d ${problemDir}`)
 
     const solutionDir = path.join(currentJobDir, 'solution')
     mkdir('-p', solutionDir)
-    solutionZip.extractAllTo(solutionDir, true);
+    exec(`unzip ${solutionZipDir} -d ${solutionDir}`)
   }
 
   run(currentJobDir: string, job: ProjectJob) {
-
-    // LANG_CONFIG is undefined rn, hence card coding the value of cpus and memory
-    const LANG_CONFIG = config.LANGS[job.lang]
+    const PROJECT_CONFIG = config.PROJECT[job.lang]
     return exec(`docker run \\
-        --cpus="1" \\
-        --memory="100m" \\
+        --cpus="${PROJECT_CONFIG.CPU_SHARE}" \\
+        --memory="${PROJECT_CONFIG.MEM_LIMIT}" \\
         --rm \\
         -v "${currentJobDir}":/usr/src/runbox \\
         -w /usr/src/runbox codingblocks/project-worker-"${job.lang}" \\
@@ -38,43 +35,43 @@ export default class ProjectScenario extends Scenario {
   }
 
   async result(currentJobDir: string, job: ProjectJob): Promise<ProjectResult> {
-
-    const result_code = cat(path.join(currentJobDir, 'result.code')).toString()
+    let result_code = cat(path.join(currentJobDir, 'result.code')).toString()
     if (result_code) {
-      // problem hash and solution hash were not equal. // error
+      //problem hash and solution hash were not equal
       return {
         id: job.id,
         stderr: cat(path.join(currentJobDir, 'result.stderr')).toString(),
         stdout: '',
         code: parseInt(result_code),
-        time: 1,
-        score: 12
+        time: 0,
+        score: 0
       }
     }
 
+    // if hashes were equal, result_code will be found inside solution directory
+    const solutionDir = path.join(currentJobDir, 'solution')
+    result_code = cat(path.join(solutionDir, 'result.code')).toString()
+    const result_time = cat(path.join(solutionDir, 'result.time')).toString()
     const build_stderr = cat(path.join(currentJobDir, 'build.stderr')).toString()
+
     if (build_stderr) {
       return {
         id: job.id,
         stderr: build_stderr,
         stdout: '',
-        code: 12123,
-        time: 1,
-        score: 100
+        code: parseInt(result_code),
+        time: parseFloat(result_time),
+        score: 0
       }
     }
 
-    const stderr = cat((path.join(currentJobDir, 'run.stderr')).toString())
-    const run_stdout = cat(path.join(currentJobDir, 'run.stdout')).toString()
-
-    // if code is set to 0, change the condition in judge-api queue logic
     return {
       id: job.id,
-      stderr: stderr,
-      stdout: run_stdout,
-      time: 0,
-      code: 100,
-      score: 100
+      stderr: cat((path.join(currentJobDir, 'run.stderr')).toString()),
+      stdout: cat(path.join(currentJobDir, 'run.stdout')).toString(),
+      code: parseInt(result_code),
+      time: parseFloat(result_time),
+      score: parseInt(result_code) === 0 ? 100 : 0
     }
   }
 }

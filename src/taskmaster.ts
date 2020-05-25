@@ -4,7 +4,9 @@ import * as amqp from 'amqplib/callback_api'
 import {Connection} from 'amqplib/callback_api'
 import { execute } from './tasks'
 import config = require('../config.js')
-import {SubmitJob, RunJob, ProjectJob} from 'tasks/job';
+import {SubmitJob} from './tasks/jobs/submission';
+import {ProjectJob} from './tasks/jobs/project';
+import {RunJob} from './tasks/jobs/run';
 import { mkdir } from 'shelljs'
 
 // =============== Setup Raven
