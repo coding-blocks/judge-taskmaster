@@ -1,5 +1,5 @@
 import config = require('../../../config.js')
-import { cat, exec, mkdir, rm, touch, head } from 'shelljs'
+import { cat, exec, mkdir} from 'shelljs'
 import { ProjectJob } from '../jobs/project'
 import { ProjectResult } from 'types/result'
 import * as path from 'path'
@@ -35,24 +35,21 @@ export default class ProjectScenario extends Scenario {
   }
 
   async result(currentJobDir: string, job: ProjectJob): Promise<ProjectResult> {
-    let result_code = cat(path.join(currentJobDir, 'result.code')).toString()
-    if (result_code) {
-      //problem hash and solution hash were not equal
-      return {
-        id: job.id,
-        stderr: cat(path.join(currentJobDir, 'result.stderr')).toString(),
-        stdout: '',
-        code: parseInt(result_code),
-        time: 0,
-        score: 0
-      }
+    const result_code = cat(path.join(currentJobDir, 'result.code')).toString()
+    if (result_code === '25') {
+        //problem hash and solution hash were not equal
+        return {
+          id: job.id,
+          stderr: cat(path.join(currentJobDir, 'result.stderr')).toString(),
+          stdout: '',
+          code: parseInt(result_code),
+          time: 0,
+          score: 0
+        }
     }
 
-    // if hashes were equal, result_code will be found inside solution directory
-    const solutionDir = path.join(currentJobDir, 'solution')
-    result_code = cat(path.join(solutionDir, 'result.code')).toString()
-    const result_time = cat(path.join(solutionDir, 'result.time')).toString()
     const build_stderr = cat(path.join(currentJobDir, 'build.stderr')).toString()
+    const result_time = cat(path.join(currentJobDir, 'result.time').toString()) || '0'
 
     if (build_stderr) {
       return {
