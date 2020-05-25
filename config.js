@@ -12,6 +12,12 @@ exports = module.exports = {
   RUNBOX: {
     DIR: process.env.RUNBOX_DIR || "/tmp/runbox"
   },
+  PROJECT: {
+    'nodejs': {
+      CPU_SHARE: '1.2',
+      MEM_LIMIT: '500m'
+    }
+  },
   LANGS: {
     'java8': {
       SOURCE_FILE: 'Main.java',

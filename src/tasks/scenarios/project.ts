@@ -36,39 +36,22 @@ export default class ProjectScenario extends Scenario {
 
   async result(currentJobDir: string, job: ProjectJob): Promise<ProjectResult> {
     const result_code = cat(path.join(currentJobDir, 'result.code')).toString()
-    if (result_code === '25') {
-        //problem hash and solution hash were not equal
-        return {
-          id: job.id,
-          stderr: cat(path.join(currentJobDir, 'result.stderr')).toString(),
-          stdout: '',
-          code: parseInt(result_code),
-          time: 0,
-          score: 0
-        }
-    }
-
+    const result_time = cat(path.join(currentJobDir, 'result.time').toString())
+    
+    const result_stderr = cat(path.join(currentJobDir, 'result.stderr')).toString()
     const build_stderr = cat(path.join(currentJobDir, 'build.stderr')).toString()
-    const result_time = cat(path.join(currentJobDir, 'result.time').toString()) || '0'
+    const run_stderr = cat(path.join(currentJobDir, 'run.stderr')).toString()
+    const run_stdout = cat(path.join(currentJobDir, 'run.stdout')).toString()
 
-    if (build_stderr) {
-      return {
-        id: job.id,
-        stderr: build_stderr,
-        stdout: '',
-        code: parseInt(result_code),
-        time: parseFloat(result_time),
-        score: 0
-      }
-    }
+    const score = +result_code === 0 ? 100 : 0
 
     return {
       id: job.id,
-      stderr: cat((path.join(currentJobDir, 'run.stderr')).toString()),
-      stdout: cat(path.join(currentJobDir, 'run.stdout')).toString(),
-      code: parseInt(result_code),
-      time: parseFloat(result_time),
-      score: parseInt(result_code) === 0 ? 100 : 0
+      stderr: result_stderr || build_stderr || run_stderr,
+      stdout: run_stdout,
+      code: +result_code,
+      time: +result_time,
+      score
     }
   }
 }
