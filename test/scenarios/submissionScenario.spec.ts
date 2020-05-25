@@ -4,7 +4,7 @@ import { mkdir, rm } from 'shelljs'
 import config = require('../../config.js')
 import * as path from 'path'
 import SubmissionScenario from '../../src/tasks/scenarios/submission'
-import { SubmitJob } from '../../src/tasks/job'
+import { SubmitJob } from '../../src/tasks/jobs/submission'
 
 describe('Submission Scenario', () => {
   it('should setup', async () => {

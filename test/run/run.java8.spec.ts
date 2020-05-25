@@ -1,6 +1,7 @@
 import {execute} from '../../src/tasks/'
 import {expect} from 'chai'
-import { RunJob } from '../../src/tasks/job'
+import {RunJob} from '../../src/tasks/jobs/run'
+
 
 describe('run - java8', () => {
   it('.java file runs correctly (Java8)', async () => {
