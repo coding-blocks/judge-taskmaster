@@ -1,6 +1,7 @@
 import {execute} from '../../src/tasks/'
 import {expect} from 'chai'
-import { RunJob } from '../../src/tasks/job'
+import {RunJob} from '../../src/tasks/jobs/run'
+
 
 describe('run - py2', () => {
   it('.py file runs correctly (Python 2.7)', async () => {
