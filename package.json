@@ -21,8 +21,12 @@
   "dependencies": {
     "amqplib": "^0.5.2",
     "newrelic": "^6.5.0",
+    "prettier": "^2.0.5",
     "raven": "^2.6.4",
-    "shelljs": "^0.8.1"
+    "shelljs": "^0.8.1",
+    "tslint": "^6.1.2",
+    "tslint-config-prettier": "^1.18.0",
+    "tslint-plugin-prettier": "^2.3.0"
   },
   "nyc": {
     "extension": [
@@ -42,6 +46,8 @@
     "dev": "NODE_PATH=dist nodemon dist/taskmaster.js",
     "test": "docker build . -t codingblocks/judge-taskmaster && mocha --timeout 10000 --exit --require ts-node/register test/**/*.ts",
     "test.parallel": "mocha-parallel-tests --timeout 10000 --exit --require ts-node/register test/**/*.ts",
+    "lint": "tslint --project .",
+    "lint:fix": "tslint --fix --project",
     "cover": "nyc npm test"
   },
   "engines": {
