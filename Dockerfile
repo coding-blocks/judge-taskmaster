@@ -1,7 +1,7 @@
 FROM node:8-alpine
 
 RUN apk add --no-cache docker
-RUN apk add build-base
+RUN apk add build-base diffutils
 
 WORKDIR /usr/src/judge-taskmaster
 
