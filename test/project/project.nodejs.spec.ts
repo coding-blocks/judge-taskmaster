@@ -1,7 +1,10 @@
 import { execute } from '../../src/tasks/'
-import { expect } from 'chai'
 import { ProjectJob } from '../../src/tasks/jobs/project'
 
+const chai = require('chai');
+const chaiAsPromised = require('chai-as-promised');
+const {expect} = chai
+chai.use(chaiAsPromised)
 
 describe('project-nodejs', () => {
   it('should run nodejs project correctly', async () => {
@@ -50,8 +53,8 @@ describe('project-nodejs', () => {
     expect(projectResult.score).to.equal(0)
   })
 
-  it('should not break when url is invalid', async () => {
-    const projectResult = await execute(new ProjectJob({
+  it('should throw error when url is invalid', async () => {
+    const job = new ProjectJob({
       id: 25,
       source: 'https://www.invalidurl.com',
       problem: 'https://www.invalidurl.com',
@@ -59,14 +62,13 @@ describe('project-nodejs', () => {
       lang: 'nodejs',
       timelimit: 20,
       scenario: 'project'
-    }))
-    expect(projectResult).to.have.keys(
-        'id',
-        'stderr',
-    )
+    })
+
+    await expect(execute(job)).to.be.rejected;
   })
 
   it('should return code = 1 when there is a build error', async () => {
+    // file downloaded from google.com will not be a nodejs project, hence build error
     const projectResult = await execute(new ProjectJob({
       id: 25,
       source: 'https://www.google.com',
@@ -86,22 +88,5 @@ describe('project-nodejs', () => {
     )
     expect(projectResult.code).to.equal(1)
     expect(projectResult.score).to.equal(0)
-  })
-
-  it('should not break if lang is incorrect', async () => {
-    const projectResult = await execute(new ProjectJob({
-      id: 25,
-      source: 'https://minio.cb.lk/public/problem.zip',
-      problem: 'https://minio.cb.lk/public/solution.zip',
-      submissionDirs: 'src/*',
-      lang: 'abcd',
-      timelimit: 20,
-      scenario: 'project'
-    }))
-
-    expect(projectResult).to.have.keys(
-        'id',
-        'stderr',
-    )
   })
 })
