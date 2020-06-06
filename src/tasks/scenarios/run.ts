@@ -1,12 +1,12 @@
 import config = require('../../../config.js')
-import {cat, exec, mkdir, rm, touch, head} from 'shelljs'
-import { RunJob } from '../job'
+import { cat, exec, mkdir, rm, touch, head } from 'shelljs'
+import { RunJob} from '../jobs/run'
 import { RunResult } from 'types/result'
 import * as path from 'path'
 import * as fs from 'fs'
 import { Scenario } from '../scenario'
 
-class RunScenario extends Scenario {
+export default class RunScenario extends Scenario {
   setup(currentJobDir: string, job: RunJob) {
     const LANG_CONFIG = config.LANGS[job.lang]
 
@@ -37,5 +37,3 @@ class RunScenario extends Scenario {
     }
   }
 }
-
-export default new RunScenario()

@@ -1,6 +1,7 @@
 import {execute} from '../../src/tasks/'
 import {expect} from 'chai'
-import { RunJob } from '../../src/tasks/job'
+import {RunJob} from '../../src/tasks/jobs/run'
+
 
 describe('run - nodejs8', () => {
   it('.js file runs correctly (NodeJS 8)', async () => {

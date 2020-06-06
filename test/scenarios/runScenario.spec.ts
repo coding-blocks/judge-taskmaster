@@ -3,7 +3,7 @@ import { mkdir, rm } from 'shelljs'
 import RunScenario from '../../src/tasks/scenarios/run'
 import config = require('../../config.js')
 import * as path from 'path'
-import { RunJob } from '../../src/tasks/job'
+import {RunJob} from '../../src/tasks/jobs/run'
 import * as fs from 'fs'
 
 describe('Run Scenario', () => {
@@ -26,7 +26,7 @@ describe('Run Scenario', () => {
     const currentJobDir = path.join(config.RUNBOX.DIR, job.id.toString())
     mkdir('-p', currentJobDir)
 
-    await RunScenario.setup(currentJobDir, job)
+    await (new RunScenario()).setup(currentJobDir, job)
 
     // assertions
     const outputSource = fs.readFileSync(path.join(currentJobDir, LANG_CONFIG.SOURCE_FILE)).toString()

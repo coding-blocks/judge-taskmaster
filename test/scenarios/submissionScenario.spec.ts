@@ -3,19 +3,10 @@ import * as fs from 'fs'
 import { mkdir, rm } from 'shelljs'
 import config = require('../../config.js')
 import * as path from 'path'
-import SubmissionScenario, { download } from '../../src/tasks/scenarios/submission'
-import { SubmitJob } from '../../src/tasks/job'
+import SubmissionScenario from '../../src/tasks/scenarios/submission'
+import { SubmitJob } from '../../src/tasks/jobs/submission'
 
 describe('Submission Scenario', () => {
-  it('should download', async () => {
-    const url = 'https://minio.cb.lk/public/input'
-    const result = await download(url, '/tmp/input')
-
-    // assertion
-    const content = fs.readFileSync('/tmp/input').toString()
-    expect(content.trim()).to.eq('World')
-  })
-
   it('should setup', async () => {
     const source = 'print("Hello World")'
 
@@ -37,7 +28,7 @@ describe('Submission Scenario', () => {
     const currentJobDir = path.join(config.RUNBOX.DIR, job.id.toString())
     mkdir('-p', currentJobDir)
 
-    await SubmissionScenario.setup(currentJobDir, job)
+    await (new SubmissionScenario()).setup(currentJobDir, job)
 
     //assertions
     const stdin = fs.readFileSync(path.join(currentJobDir, 'testcases', '' + job.testcases[0].id, 'stdin')).toString()

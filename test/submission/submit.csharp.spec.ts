@@ -1,6 +1,6 @@
 import { execute } from '../../src/tasks/'
 import { expect } from 'chai'
-import { SubmitJob } from '../../src/tasks/job'
+import { SubmitJob } from "../../src/tasks/jobs/submission"
 import { SubmissionResult } from '../../src/types/result'
 
 describe('submit - csharp', () => {

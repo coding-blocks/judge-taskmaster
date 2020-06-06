@@ -19,3 +19,10 @@ export interface RunResult extends Result {
 export interface SubmissionResult extends Result {
   testcases: Array<TestcaseResult>
 }
+
+export interface ProjectResult extends Result {
+  stdout: string,
+  code: number,
+  time: number,
+  score: number
+}

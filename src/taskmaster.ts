@@ -4,7 +4,9 @@ import * as amqp from 'amqplib/callback_api'
 import {Connection} from 'amqplib/callback_api'
 import { execute } from './tasks'
 import config = require('../config.js')
-import { SubmitJob, RunJob } from 'tasks/job';
+import {SubmitJob} from './tasks/jobs/submission';
+import {ProjectJob} from './tasks/jobs/project';
+import {RunJob} from './tasks/jobs/run';
 import { mkdir } from 'shelljs'
 
 // =============== Setup Raven
@@ -50,6 +52,9 @@ amqp.connect(`amqp://${config.AMQP.USER}:${config.AMQP.PASS}@${config.AMQP.HOST}
             break
           case 'run':
             job = new RunJob(payload)
+            break
+          case 'project':
+            job = new ProjectJob(payload)
             break
           default:
             throw new Error("Scenario not declared")
