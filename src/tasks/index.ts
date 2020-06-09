@@ -29,7 +29,7 @@ export async function execute (job: Job) {
   }
 
   // Setup RUNBOX
-  await scenario.setup(currentJobDir, job) 
+  await scenario.setup(currentJobDir, job)
 
   // Run worker
   await scenario.run(currentJobDir, job)
