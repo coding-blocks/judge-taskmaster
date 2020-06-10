@@ -41,14 +41,16 @@ export default class ProjectScenario extends Scenario {
     const result_stderr = cat(path.join(currentJobDir, 'result.stderr')).toString()
     const build_stderr = cat(path.join(currentJobDir, 'build.stderr')).toString()
     const run_stderr = cat(path.join(currentJobDir, 'run.stderr')).toString()
-    const run_stdout = cat(path.join(currentJobDir, 'run.stdout')).toString()
+
+    const stdout = cat(path.join(currentJobDir, 'run.stdout')).toString()
+    const stderr = result_stderr || build_stderr || run_stderr
 
     const score = +result_code === 0 ? 100 : 0
 
     return {
       id: job.id,
-      stderr: result_stderr || build_stderr || run_stderr,
-      stdout: run_stdout,
+      stderr: (new Buffer(stderr)).toString('base64'),
+      stdout: (new Buffer(stdout)).toString('base64'),
       code: +result_code,
       time: +result_time,
       score
