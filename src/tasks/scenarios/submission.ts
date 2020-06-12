@@ -30,6 +30,7 @@ export default class SubmissionScenario extends Scenario {
     if (compile_stderr) {
       return {
         id: job.id,
+        scenario: 'submit',
         stderr: (new Buffer(compile_stderr)).toString('base64'),
         testcases: []
       }
@@ -73,6 +74,7 @@ export default class SubmissionScenario extends Scenario {
 
     return {
       id: job.id,
+      scenario: 'submit',
       stderr: (new Buffer(compile_stderr)).toString('base64'),
       testcases
     }

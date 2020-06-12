@@ -30,6 +30,7 @@ export default class RunScenario extends Scenario {
 
     return {
       id: job.id,
+      scenario: 'run',
       stderr: (new Buffer(stderr)).toString('base64'),
       stdout: (new Buffer(stdout)).toString('base64'),
       time: +run_time,

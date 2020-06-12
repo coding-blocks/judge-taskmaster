@@ -49,6 +49,7 @@ export default class ProjectScenario extends Scenario {
 
     return {
       id: job.id,
+      scenario: 'project',
       stderr: (new Buffer(stderr)).toString('base64'),
       stdout: (new Buffer(stdout)).toString('base64'),
       code: +result_code,

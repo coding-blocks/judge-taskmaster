@@ -1,5 +1,6 @@
 export interface Result {
   id: number,
+  scenario: string,
   stderr: string
 }
 
