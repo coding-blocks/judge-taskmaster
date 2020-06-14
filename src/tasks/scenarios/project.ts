@@ -35,7 +35,7 @@ export default class ProjectScenario extends Scenario {
   }
 
   async result(currentJobDir: string, job: ProjectJob): Promise<ProjectResult> {
-    const result_code = cat(path.join(currentJobDir, 'result.code')).toString()
+    const result_code = cat(path.join(currentJobDir, 'result.code')).toString() || '1'
     const result_time = cat(path.join(currentJobDir, 'result.time').toString())
     
     const result_stderr = cat(path.join(currentJobDir, 'result.stderr')).toString()

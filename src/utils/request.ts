@@ -1,17 +1,28 @@
-import { ClientRequest } from 'http';
-import * as https from 'https';
-import * as fs from 'fs'
+import axios from 'axios';
+import * as fs from 'fs';
 
-export const download = (url: string, dest: string): Promise<ClientRequest> => {
-  const file = fs.createWriteStream(dest);
-  return new Promise((resolve, reject) =>
-    https.get(url, function (response) {
-      response.pipe(file);
-      file.on('finish', function () {
-        resolve()
+export const download = (url: string, dest: string) => {
+  const writer = fs.createWriteStream(dest);
+
+  return axios({
+    method: 'get',
+    url: url,
+    responseType: 'stream'
+  }).then(function (response) {
+    return new Promise((resolve, reject) => {
+      response.data.pipe(writer);
+      let error = null;
+      writer.on('error', err => {
+        error = err;
+        writer.close();
+        reject(err);
       });
-    }).on('error', err => {
-      reject(err)
-    })
-  )
+      writer.on('close', () => {
+        if (!error) {
+          resolve(true);
+        }
+      });
+    });
+  });
 }
+
