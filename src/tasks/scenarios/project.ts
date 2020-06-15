@@ -1,5 +1,5 @@
 import config = require('../../../config.js')
-import { cat, exec, mkdir} from 'shelljs'
+import { cat, exec, mkdir, rm} from 'shelljs'
 import { ProjectJob } from '../jobs/project'
 import { ProjectResult } from 'types/result'
 import * as path from 'path'
@@ -8,18 +8,15 @@ import { download } from 'utils/request'
 
 export default class ProjectScenario extends Scenario {
   async setup(currentJobDir: string, job: ProjectJob) {
-    const problemZipDir = path.join(currentJobDir, 'problem.zip')
-    const solutionZipDir = path.join(currentJobDir, 'solution.zip')
-    await download(job.problem, problemZipDir)
-    await download(job.source, solutionZipDir)
+    const problemBundlePath = path.join(currentJobDir, 'problem.git')
+    const solutionBundlePath = path.join(currentJobDir, 'solution.git')
+    await Promise.all([
+      download(job.problem, problemBundlePath),
+      download(job.source, solutionBundlePath)
+    ])
 
-    const problemDir = path.join(currentJobDir, 'problem')
-    mkdir('-p', problemDir)
-    exec(`unzip ${problemZipDir} -d ${problemDir}`)
-
-    const solutionDir = path.join(currentJobDir, 'solution')
-    mkdir('-p', solutionDir)
-    exec(`unzip ${solutionZipDir} -d ${solutionDir}`)
+    exec(`git clone ${currentJobDir}/problem.git ${currentJobDir}/problem`)
+    exec(`git clone ${currentJobDir}/solution.git ${currentJobDir}/solution`)
   }
 
   run(currentJobDir: string, job: ProjectJob) {
@@ -30,7 +27,7 @@ export default class ProjectScenario extends Scenario {
         --rm \\
         -v "${currentJobDir}":/usr/src/runbox \\
         -w /usr/src/runbox codingblocks/project-worker-"${job.lang}" \\
-        /bin/judge.sh -s "${job.submissionDirs}"
+        /bin/judge.py -t ${job.timelimit || 5} -l ${job.submissionDirs.join(' ')}
     `);
   }
 

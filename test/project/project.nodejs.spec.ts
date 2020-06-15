@@ -7,9 +7,9 @@ describe('submit - nodejs', () => {
     const result = await execute(new ProjectJob({
       id: 4,
       lang: 'nodejs',
-      source: 'http://127.0.0.1:8000/solution.zip',
-      problem: 'http://127.0.0.1:8000/problem.zip',
-      submissionDirs: 'src/*',
+      source: 'http://127.0.0.1:8000/solution.git',
+      problem: 'http://127.0.0.1:8000/problem.git',
+      submissionDirs: ['package.json', 'yarn.lock', 'test'],
       scenario: 'project'
     }))
 
