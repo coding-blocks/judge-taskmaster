@@ -9,7 +9,7 @@ describe('submit - nodejs', () => {
       lang: 'nodejs',
       source: 'http://127.0.0.1:8000/solution.git',
       problem: 'http://127.0.0.1:8000/problem.git',
-      submissionDirs: ['package.json', 'yarn.lock', 'test'],
+      lockedFiles: ['package.json', 'yarn.lock', 'test'],
       scenario: 'project'
     }))
 

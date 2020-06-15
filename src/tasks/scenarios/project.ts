@@ -27,7 +27,7 @@ export default class ProjectScenario extends Scenario {
         --rm \\
         -v "${currentJobDir}":/usr/src/runbox \\
         -w /usr/src/runbox codingblocks/project-worker-"${job.lang}" \\
-        /bin/judge.py -t ${job.timelimit || 5} -l ${job.submissionDirs.join(' ')}
+        /bin/judge.py -t ${job.timelimit || 5} -l ${job.lockedFiles.join(' ')}
     `);
   }
 
