@@ -11,6 +11,14 @@ export interface TestcaseResult {
   result: string 
 }
 
+export interface ProjectTestcaseResult {
+  id: number,
+  score: number,
+  time: string,
+  stdout: string,
+  stderr: string
+}
+
 export interface RunResult extends Result {
   stdout: string,
   time: number,
@@ -22,8 +30,5 @@ export interface SubmissionResult extends Result {
 }
 
 export interface ProjectResult extends Result {
-  stdout: string,
-  code: number,
-  time: number,
-  score: number
+  testcases: Array<ProjectTestcaseResult>
 }

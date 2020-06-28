@@ -1,28 +1,26 @@
 import axios from 'axios';
 import * as fs from 'fs';
 
-export const download = (url: string, dest: string) => {
+export const download = async (url: string, dest: string) => {
   const writer = fs.createWriteStream(dest);
 
-  return axios({
+  const response = await axios({
     method: 'get',
     url: url,
     responseType: 'stream'
-  }).then(function (response) {
-    return new Promise((resolve, reject) => {
-      response.data.pipe(writer);
-      let error = null;
-      writer.on('error', err => {
-        error = err;
-        writer.close();
-        reject(err);
-      });
-      writer.on('close', () => {
-        if (!error) {
-          resolve(true);
-        }
-      });
-    });
-  });
+  })
+
+  response.data.pipe(writer);
+
+  return new Promise((resolve, reject) => {
+    writer.on('error', err => {
+      console.log(err)
+      writer.close();
+      reject(err);
+    })
+    writer.on('close', () => {
+      resolve();
+    })
+  })
 }
 

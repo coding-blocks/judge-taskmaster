@@ -1,5 +1,8 @@
 import config = require('../../../config.js')
-import { cat, exec, mkdir, rm} from 'shelljs'
+import * as fs from 'fs'
+import * as YAML from 'yaml'
+import { cat, exec, mkdir, cp, ls } from 'shelljs'
+import { execSync } from 'child_process'
 import { ProjectJob } from '../jobs/project'
 import { ProjectResult } from 'types/result'
 import * as path from 'path'
@@ -8,15 +11,25 @@ import { download } from 'utils/request'
 
 export default class ProjectScenario extends Scenario {
   async setup(currentJobDir: string, job: ProjectJob) {
-    const problemBundlePath = path.join(currentJobDir, 'problem.git')
-    const solutionBundlePath = path.join(currentJobDir, 'solution.git')
+    const projectPath = path.join(currentJobDir, 'project.zip')
+    const solutionPath = path.join(currentJobDir, 'solution.zip')
+    const config = YAML.parse(job.config)
+
     await Promise.all([
-      download(job.problem, problemBundlePath),
-      download(job.source, solutionBundlePath)
+      download(job.problem, projectPath),
+      download(job.source, solutionPath)
     ])
 
-    exec(`git clone ${currentJobDir}/problem.git ${currentJobDir}/problem`)
-    exec(`git clone ${currentJobDir}/solution.git ${currentJobDir}/solution`)
+    exec(`mkdir -p ${currentJobDir}/project && unzip -d ${currentJobDir}/project ${projectPath}`)
+    exec(`mkdir -p ${currentJobDir}/solution && unzip -d ${currentJobDir}/solution ${solutionPath}`)
+
+    config.project['allowed-folders'].map(glob => {
+      execSync(`shopt -s globstar && rsync -R ${glob} ${currentJobDir}/project`, {
+        cwd: `${currentJobDir}/solution`,
+        shell: 'bash'
+      })
+    })
+    fs.writeFileSync(`${currentJobDir}/project.yml`, job.config)
   }
 
   run(currentJobDir: string, job: ProjectJob) {
@@ -27,31 +40,47 @@ export default class ProjectScenario extends Scenario {
         --rm \\
         -v "${currentJobDir}":/usr/src/runbox \\
         -w /usr/src/runbox codingblocks/project-worker-"${job.lang}" \\
-        /bin/judge.py -t ${job.timelimit || 5} -l ${job.lockedFiles.join(' ')}
+        /bin/judge.py -t ${job.timelimit || 20}
     `);
   }
 
   async result(currentJobDir: string, job: ProjectJob): Promise<ProjectResult> {
-    const result_code = cat(path.join(currentJobDir, 'result.code')).toString() || '1'
-    const result_time = cat(path.join(currentJobDir, 'result.time').toString())
-    
-    const result_stderr = cat(path.join(currentJobDir, 'result.stderr')).toString()
-    const build_stderr = cat(path.join(currentJobDir, 'build.stderr')).toString()
-    const run_stderr = cat(path.join(currentJobDir, 'run.stderr')).toString()
+    const setup_stdout = cat(path.join(currentJobDir, 'setup.stdout')).toString()
+    const setup_stderr = cat(path.join(currentJobDir, 'setup.stderr')).toString()
 
-    const stdout = cat(path.join(currentJobDir, 'run.stdout')).toString()
-    const stderr = result_stderr || build_stderr || run_stderr
+    if (setup_stderr) {
+      return {
+        id: job.id,
+        scenario: 'project',
+        stderr: (new Buffer(setup_stderr)).toString('base64'),
+        testcases: []
+      }
+    }
 
-    const score = +result_code === 0 ? 100 : 0
+    const testcases = ls(path.join(currentJobDir, 'result')).map(index => {
+      const currentTestcasePath = path.join(currentJobDir, 'result', index)
+
+      const stderr = cat(path.join(currentTestcasePath, 'run.stderr')).toString()
+      const time = cat(path.join(currentTestcasePath, 'run.time')).toString().trim()
+      const code = cat(path.join(currentTestcasePath, 'run.code')).toString().trim()
+      const stdout = cat(path.join(currentTestcasePath, 'run.stdout')).toString()
+
+      const score = +code === 0 ? 100 : 0
+
+      return {
+        id: +index,
+        time,
+        stdout: (new Buffer(stdout)).toString('base64'),
+        stderr: (new Buffer(stderr)).toString('base64'),
+        score
+      }
+    })
 
     return {
       id: job.id,
       scenario: 'project',
-      stderr: (new Buffer(stderr)).toString('base64'),
-      stdout: (new Buffer(stdout)).toString('base64'),
-      code: +result_code,
-      time: +result_time,
-      score
+      stderr: (new Buffer(setup_stderr)).toString('base64'),
+      testcases
     }
   }
 }
