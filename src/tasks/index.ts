@@ -37,7 +37,7 @@ export async function execute (job: Job) {
   // Get result
   const result = await scenario.result(currentJobDir, job)
 
-  // rm('-rf', currentJobDir)
+  rm('-rf', currentJobDir)
 
   return result
 }

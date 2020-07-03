@@ -2,7 +2,6 @@ import config = require('../../../config.js')
 import * as fs from 'fs'
 import * as YAML from 'yaml'
 import { cat, exec, mkdir, cp, ls } from 'shelljs'
-import { execSync } from 'child_process'
 import { ProjectJob } from '../jobs/project'
 import { ProjectResult } from 'types/result'
 import * as path from 'path'
@@ -23,10 +22,9 @@ export default class ProjectScenario extends Scenario {
     exec(`mkdir -p ${currentJobDir}/project && unzip -d ${currentJobDir}/project ${projectPath}`)
     exec(`mkdir -p ${currentJobDir}/solution && unzip -d ${currentJobDir}/solution ${solutionPath}`)
 
-    config.project['allowed-folders'].map(glob => {
-      execSync(`shopt -s globstar && rsync -R ${glob} ${currentJobDir}/project`, {
-        cwd: `${currentJobDir}/solution`,
-        shell: 'bash'
+    config.project['allowed-folders'].map(folder => {
+      exec(`rsync -aR --exclude-from ${currentJobDir}/project/.gitignore ${folder} ${currentJobDir}/project`, {
+        cwd: `${currentJobDir}/solution`
       })
     })
     fs.writeFileSync(`${currentJobDir}/project.yml`, job.config)

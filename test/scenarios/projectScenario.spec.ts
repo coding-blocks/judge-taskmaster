@@ -10,12 +10,12 @@ describe('Project Scenario', () => {
     const job: ProjectJob = new ProjectJob({
       id: 4,
       lang: 'nodejs',
-      source: 'https://minio.cb.lk/public/sample-solution.zip',
-      problem: 'https://minio.cb.lk/public/problem.zip',
+      source: 'https://minio.cb.lk/hackerblocks/sample-solution.zip',
+      problem: 'https://minio.cb.lk/hackerblocks/sample-problem_2.zip',
       config: `
 project:
   allowed-folders:
-    - src/**/*.js
+    - src/
   before-test:
     - yarn install
     - yarn build
