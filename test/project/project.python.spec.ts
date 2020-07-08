@@ -2,22 +2,21 @@ import { execute } from '../../src/tasks/'
 import { expect } from 'chai'
 import { ProjectJob } from "../../src/tasks/jobs/project"
 
-describe('project - nodejs', () => {
+describe('project - python', () => {
   it('nodejs project submits correctly', async () => {
     const result = await execute(new ProjectJob({
-      id: 4,
-      lang: 'nodejs',
-      source: 'https://minio.cb.lk/hackerblocks/sample-solution.zip',
-      problem: 'https://minio.cb.lk/hackerblocks/sample-problem_2.zip',
+      id: 5,
+      lang: 'python',
+      source: 'https://minio.cb.lk/hackerblocks/python-solution.zip',
+      problem: 'https://minio.cb.lk/hackerblocks/python-problem.zip',
       config: `
 project:
   allowed-folders:
-    - src/
+    - main/
   before-test:
-    - yarn install
-    - yarn build
+    - pip install -r requirements.txt
   testcases:
-    - yarn test
+    - python manage.py test tests/*
       `,
       scenario: 'project',
       timelimit: 60

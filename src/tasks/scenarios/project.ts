@@ -45,8 +45,9 @@ export default class ProjectScenario extends Scenario {
   async result(currentJobDir: string, job: ProjectJob): Promise<ProjectResult> {
     const setup_stdout = cat(path.join(currentJobDir, 'setup.stdout')).toString()
     const setup_stderr = cat(path.join(currentJobDir, 'setup.stderr')).toString()
+    const setup_code = cat(path.join(currentJobDir, 'setup.code')).toString()
 
-    if (setup_stderr) {
+    if (setup_code !== '0') {
       return {
         id: job.id,
         scenario: 'project',

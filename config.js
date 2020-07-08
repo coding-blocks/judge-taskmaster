@@ -16,6 +16,10 @@ exports = module.exports = {
     'nodejs': {
       CPU_SHARE: '1.2',
       MEM_LIMIT: '500m'
+    },
+    'python': {
+      CPU_SHARE: '1.2',
+      MEM_LIMIT: '500m'
     }
   },
   LANGS: {
