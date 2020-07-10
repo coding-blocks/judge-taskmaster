@@ -12,7 +12,7 @@ describe('Run Scenario', () => {
     const stdin = 'World'
 
     const job: RunJob = {
-      id: 1,
+      id: Math.floor(Math.random() * 1000),
       source: (new Buffer(source)).toString('base64'),
       lang: 'py3',
       timelimit: 5,

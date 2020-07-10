@@ -6,7 +6,7 @@ import {RunJob} from '../../src/tasks/jobs/run'
 describe('run - java8', () => {
   it('.java file runs correctly (Java8)', async () => {
     const runResult = await execute(new RunJob({
-      id: 22,
+      id: Math.floor(Math.random() * 1000),
       lang: 'java8',
       source: (new Buffer(`
 import java.util.Scanner;

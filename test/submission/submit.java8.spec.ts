@@ -17,12 +17,12 @@ describe('submit - java8', () => {
   `
 
     const submitResult = await execute(new SubmitJob({
-      id: 4,
+      id: Math.floor(Math.random() * 1000),
       lang: 'java8',
       source: (new Buffer(source)).toString('base64'),
       scenario: 'submit',
       testcases: [{
-        id: 1,
+        id: Math.floor(Math.random() * 1000),
         input: 'https://minio.cb.lk/public/input',
         output: 'https://minio.cb.lk/public/output'
       }]

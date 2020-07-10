@@ -8,7 +8,7 @@ import ProjectScenario from '../../src/tasks/scenarios/project'
 describe('Project Scenario', () => {
   it('should setup', async () => {
     const job: ProjectJob = new ProjectJob({
-      id: 4,
+      id: Math.floor(Math.random() * 1000),
       lang: 'nodejs',
       source: 'https://minio.cb.lk/hackerblocks/sample-solution.zip',
       problem: 'https://minio.cb.lk/hackerblocks/sample-problem_2.zip',

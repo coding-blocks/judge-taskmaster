@@ -6,7 +6,7 @@ import {RunJob} from '../../src/tasks/jobs/run'
 describe('run - cpp', () => {
   it('.cpp file runs correctly', async () => {
     const runResult = await execute(new RunJob({
-      id: 20,
+      id: Math.floor(Math.random() * 1000),
       lang: 'cpp',
       source: (new Buffer(`
 #include <iostream>

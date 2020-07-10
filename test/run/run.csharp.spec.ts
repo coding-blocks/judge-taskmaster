@@ -6,7 +6,7 @@ import {RunJob} from '../../src/tasks/jobs/run'
 describe('run - csharp', () => {
   it('.cs file runs correctly', async () => {
     const runResult = await execute(new RunJob({
-      id: 21,
+      id: Math.floor(Math.random() * 1000),
       lang: 'csharp',
       source: (new Buffer(`
 using System;

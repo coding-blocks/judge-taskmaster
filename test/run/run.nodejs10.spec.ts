@@ -5,7 +5,7 @@ import {RunJob} from '../../src/tasks/jobs/run'
 describe('run - nodejs10', () => {
   it('.js file runs correctly (NodeJS 6)', async () => {
     const runResult = await execute(new RunJob({
-      id: 24,
+      id: Math.floor(Math.random() * 1000),
       lang: 'nodejs10',
       source: (new Buffer(`
 var readline = require('readline');

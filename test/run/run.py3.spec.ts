@@ -6,7 +6,7 @@ import {RunJob} from '../../src/tasks/jobs/run'
 describe('run - py3', () => {
   it('.py file runs correctly (Python 3.0)', async () => {
     const runResult = await execute(new RunJob({
-      id: 26,
+      id: Math.floor(Math.random() * 1000),
       lang: 'py3',
       source: (new Buffer(`
 inp = input()

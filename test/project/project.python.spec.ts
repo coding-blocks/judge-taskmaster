@@ -5,7 +5,7 @@ import { ProjectJob } from "../../src/tasks/jobs/project"
 describe('project - python', () => {
   it('nodejs project submits correctly', async () => {
     const result = await execute(new ProjectJob({
-      id: 5,
+      id: Math.floor(Math.random() * 1000),
       lang: 'python',
       source: 'https://minio.cb.lk/hackerblocks/python-solution.zip',
       problem: 'https://minio.cb.lk/hackerblocks/python-problem.zip',

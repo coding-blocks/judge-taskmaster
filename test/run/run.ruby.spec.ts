@@ -6,7 +6,7 @@ import {RunJob} from '../../src/tasks/jobs/run'
 describe('run - ruby', () => {
   it('.rb file runs correctly', async () => {
     const runResult = await execute(new RunJob({
-      id: 27,
+      id: Math.floor(Math.random() * 1000),
       lang: 'ruby',
       source: (new Buffer(`
 puts "Hello " + gets.to_s

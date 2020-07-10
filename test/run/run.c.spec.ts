@@ -5,7 +5,7 @@ import {RunJob} from '../../src/tasks/jobs/run'
 describe('run - c', () => {
   it('.c file runs correctly', async () => {
     const runResult = await execute(new RunJob({
-      id: 19,
+      id: Math.floor(Math.random() * 1000),
       lang: 'c',
       source: (new Buffer(`
 #include <stdio.h>

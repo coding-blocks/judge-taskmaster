@@ -6,7 +6,7 @@ import {RunJob} from '../../src/tasks/jobs/run'
 describe('run - nodejs8', () => {
   it('.js file runs correctly (NodeJS 8)', async () => {
     const runResult = await execute(new RunJob({
-      id: 25,
+      id: Math.floor(Math.random() * 1000),
       lang: 'nodejs8',
       source: (new Buffer(`
 const readline = require('readline');

@@ -16,12 +16,12 @@ describe('submit - cpp', () => {
       }`
 
     const submitResult = await execute(new SubmitJob({
-      id: 1,
+      id: Math.floor(Math.random() * 1000),
       lang: 'cpp',
       source: (new Buffer(source)).toString('base64'),
       scenario: 'submit',
       testcases: [{
-        id: 1,
+        id: Math.floor(Math.random() * 1000),
         input: 'https://minio.cb.lk/public/input',
         output: 'https://minio.cb.lk/public/output'
       }]
@@ -38,12 +38,12 @@ describe('submit - cpp', () => {
       using namespace std;
       int main () {`    
     const submitResult = await execute(new SubmitJob({
-      id: 2,
+      id: Math.floor(Math.random() * 1000),
       lang: 'cpp',
       source: (new Buffer(source)).toString('base64'),
       scenario: 'submit',
       testcases: [{
-        id: 1,
+        id: Math.floor(Math.random() * 1000),
         input: 'https://minio.cb.lk/public/input',
         output: 'https://minio.cb.lk/public/output'
       }]
