@@ -17,9 +17,9 @@ Raven.config(config.SENTRY.DSN, {
 }).install()
 // =============== Setup Raven
 
-const jobQ = 'job_queue'
-const successQ = 'success_queue'
-const errorQ = 'error_queue'
+const jobQ = config.JOB_QUEUE
+const successQ = config.SUCCESS_QUEUE
+const errorQ = config.ERROR_QUEUE
 
 mkdir('-p', config.RUNBOX.DIR)
 

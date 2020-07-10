@@ -1,4 +1,7 @@
 exports = module.exports = {
+  JOB_QUEUE: process.env.JOB_QUEUE || 'job_queue' ,
+  SUCCESS_QUEUE: process.env.SUCCESS_QUEUE || 'success_queue' ,
+  ERROR_QUEUE: process.env.ERROR_QUEUE || 'error_queue' ,
   MAX_OUTPUT_BUFFER: 65536,
   AMQP: {
     USER: process.env.AMQP_USER || 'codingblocks',
