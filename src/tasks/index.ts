@@ -28,16 +28,21 @@ export async function execute (job: Job) {
     scenario = new ProjectScenario()
   }
 
-  // Setup RUNBOX
-  await scenario.setup(currentJobDir, job) 
-
-  // Run worker
-  await scenario.run(currentJobDir, job)
-
-  // Get result
-  const result = await scenario.result(currentJobDir, job)
-
-  rm('-rf', currentJobDir)
-
-  return result
+  try {
+    // Setup RUNBOX
+    await scenario.setup(currentJobDir, job) 
+  
+    // Run worker
+    await scenario.run(currentJobDir, job)
+  
+    // Get result
+    const result = await scenario.result(currentJobDir, job)
+  
+    rm('-rf', currentJobDir)
+    return result
+    
+  } catch(err) {
+    rm('-rf', currentJobDir)
+    throw err
+  }
 }
