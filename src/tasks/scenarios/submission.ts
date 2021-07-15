@@ -54,7 +54,7 @@ export default class SubmissionScenario extends Scenario {
       const diff = exec(`
         diff -b -B -a --suppress-common-lines --speed-large-files ${runOutputFile} ${expectedOutputFile}
       `)
-      const score = diff.code === 0 ? 100 : 0
+      let score = diff.code === 0 ? 100 : 0
 
       const result = new Array(
         +code === 143 && "TLE",
@@ -64,6 +64,8 @@ export default class SubmissionScenario extends Scenario {
         +code === 0 && "Success"
       ).reduce((acc, cur) => acc || cur)
 
+      if(stderr || result!=="Success")
+        score=0
       return {
         id: +testcase,
         time,
