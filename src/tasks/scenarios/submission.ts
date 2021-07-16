@@ -64,8 +64,8 @@ export default class SubmissionScenario extends Scenario {
         +code === 0 && "Success"
       ).reduce((acc, cur) => acc || cur)
 
-      if(stderr || result!=="Success")
-        score=0
+      if (stderr || result !== "Success")
+        score = 0
       return {
         id: +testcase,
         time,
