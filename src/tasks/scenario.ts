@@ -17,7 +17,7 @@ export class Scenario {
       -v "${currentJobDir}":/usr/src/runbox \\
       -w /usr/src/runbox \\
       codingblocks/judge-worker-${job.lang} \\
-      /bin/judge.sh -t ${job.timelimit || 5} 
+      /bin/judge.sh
     `)
   }
   result(currentJobDir: string, job: Job): Promise<Result> {

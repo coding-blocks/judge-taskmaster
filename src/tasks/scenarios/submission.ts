@@ -1,5 +1,5 @@
 import config = require('../../../config.js')
-import { cat, ls, mkdir, exec } from 'shelljs'
+import { cat, ls, mkdir, exec, ShellString } from 'shelljs'
 import { SubmitJob } from '../jobs/submission'
 import { SubmissionResult } from 'types/result'
 import * as path from 'path'
@@ -19,6 +19,9 @@ export default class SubmissionScenario extends Scenario {
     return Promise.all(job.testcases.map(testcase => {
       const rootDir = path.join(testCasesDir, '' + testcase.id)
       mkdir('-p', rootDir)      
+      if(testcase.timelimit) {
+        ShellString(testcase.timelimit[job.lang]).to(path.join(rootDir + '/timelimit'))
+      }
       return download(testcase.input, path.join(rootDir, 'stdin'))
     }))
   }

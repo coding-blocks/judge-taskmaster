@@ -4,6 +4,7 @@ interface TestcaseOpts {
   id: number,
   input: string,
   output: string
+  timelimit: string
 }
 
 interface SubmitJobConstructorOpts extends JobConstructorOpts {
