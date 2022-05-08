@@ -5,6 +5,7 @@ interface TestcaseOpts {
   input: string,
   output: string
   timelimit: string
+  memorylimit: string
 }
 
 interface SubmitJobConstructorOpts extends JobConstructorOpts {

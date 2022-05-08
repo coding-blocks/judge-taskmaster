@@ -22,6 +22,9 @@ export default class SubmissionScenario extends Scenario {
       if(testcase.timelimit) {
         ShellString(testcase.timelimit[job.lang]).to(path.join(rootDir + '/timelimit'))
       }
+      if(testcase.memorylimit) {
+        ShellString(testcase.memorylimit[job.lang]).to(path.join(rootDir + '/memorylimit'))
+      }
       return download(testcase.input, path.join(rootDir, 'stdin'))
     }))
   }
@@ -61,7 +64,7 @@ export default class SubmissionScenario extends Scenario {
 
       const result = new Array(
         +code === 143 && "TLE",
-        +code === 137 && "MLE",
+        +code === 139 && "MLE",
         +code !== 0 && "Run Error",
         +code === 0 && score === 0 && "Wrong Answer",
         +code === 0 && "Success"
