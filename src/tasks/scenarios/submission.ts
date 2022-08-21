@@ -76,7 +76,8 @@ export default class SubmissionScenario extends Scenario {
         id: +testcase,
         time,
         result,
-        score
+        score,
+        stderr
       }
     })
 
