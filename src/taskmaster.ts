@@ -64,6 +64,7 @@ amqp.connect(`amqp://${config.AMQP.USER}:${config.AMQP.PASS}@${config.AMQP.HOST}
       
         channel.sendToQueue(successQ, (new Buffer(JSON.stringify(jobResult))))  
       } catch (err) {
+        console.log(err)
         Raven.captureException(err);
         channel.sendToQueue(errorQ, (new Buffer(msg.content)))
       }
