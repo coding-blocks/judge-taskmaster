@@ -53,6 +53,7 @@ export default class SubmissionScenario extends Scenario {
       const stderr = cat(path.join(currentTestcasePath, 'run.stderr')).toString()
       const time = cat(path.join(currentTestcasePath, 'runguard.time')).toString().trim()
       const code = cat(path.join(currentTestcasePath, 'runguard.code')).toString()
+      const timelimit = cat(path.join(currentTestcasePath, 'timelimit'))
 
       const runOutputFile = path.join(currentTestcasePath, 'run.stdout')
       const expectedOutputFile = path.join(currentTestcasePath, 'stdout')
@@ -62,16 +63,19 @@ export default class SubmissionScenario extends Scenario {
       `)
       let score = diff.code === 0 ? 100 : 0
 
-      const result = new Array(
+      let result = new Array(
         +code === 143 && "TLE",
         +code === 139 && "MLE",
         +code !== 0 && "Run Error",
         +code === 0 && score === 0 && "Wrong Answer",
         +code === 0 && "Success"
       ).reduce((acc, cur) => acc || cur)
-
       if (stderr || result !== "Success")
         score = 0
+      if(+timelimit.stdout && +time > +timelimit.stdout && +code !== 143) {
+        result = "TLE"
+        score = 0
+      }
       return {
         id: +testcase,
         time,
