@@ -8,17 +8,20 @@ export class Scenario {
     throw new Error("Not Implemented")
   }
   run(currentJobDir: string, job: Job) {
-    const LANG_CONFIG = config.LANGS[job.lang]
-    return exec(`docker run \\
+    const LANG_CONFIG = config.LANGS[job.lang];
+    const uLimit = job.lang === "mysql" ? "" : "--ulimit nofile=64:64";
+    return exec(
+      `docker run \\
       --cpus="${LANG_CONFIG.CPU_SHARE}" \\
       --memory="${LANG_CONFIG.MEM_LIMIT}" \\
-      --ulimit nofile=64:64 \\
       --rm \\
+      ${uLimit ? `${uLimit}` : ""} \\
       -v "${currentJobDir}":/usr/src/runbox \\
       -w /usr/src/runbox \\
       codingblocks/judge-worker-${job.lang} \\
       /bin/judge.sh
-    `)
+    `,
+    );
   }
   result(currentJobDir: string, job: Job): Promise<Result> {
     throw new Error("Not Implemented")

@@ -95,6 +95,11 @@ exports = module.exports = {
       SOURCE_FILE: 'Main.kt',
       CPU_SHARE: "1.2",
       MEM_LIMIT: '500m',
+    },
+    'mysql': {
+      SOURCE_FILE: 'script.sql',
+      CPU_SHARE: "1.2",
+      MEM_LIMIT: '500m',
     }
   }
 }
