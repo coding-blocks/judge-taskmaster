@@ -61,8 +61,6 @@ export default class SubmissionScenario extends Scenario {
       let score = 0;
       switch(job.lang) {
         case 'mysql': {
-          console.log('inside job kang mysql')
-
           const fromEntries =  (entries) => {
             return entries.reduce((acc, [key, value]) => {
               acc[key] = value;
@@ -87,11 +85,7 @@ export default class SubmissionScenario extends Scenario {
           const expectedOutput = fs.readFileSync(expectedOutputFile, {
             encoding: 'utf-8'
           });
-          try { 
-            score = compare(JSON.parse(runOutput), JSON.parse(expectedOutput)) ? 100 : 0;
-          } catch(err) {
-            // unable to parse json
-          }
+          score = compare(JSON.parse(runOutput), JSON.parse(expectedOutput)) ? 100 : 0;
           break;
         }
         default: {
