@@ -58,10 +58,44 @@ export default class SubmissionScenario extends Scenario {
       const runOutputFile = path.join(currentTestcasePath, 'run.stdout')
       const expectedOutputFile = path.join(currentTestcasePath, 'stdout')
 
-      const diff = exec(`
-        diff -b -B -a --suppress-common-lines --speed-large-files ${runOutputFile} ${expectedOutputFile}
-      `)
-      let score = diff.code === 0 ? 100 : 0
+      let score = 0;
+      switch(job.lang) {
+        case 'mysql': {
+          const fromEntries =  (entries) => {
+            return entries.reduce((acc, [key, value]) => {
+              acc[key] = value;
+              return acc;
+            }, {});
+          };
+
+          const normalizeObject = (obj) => 
+            fromEntries(Object.entries(obj).sort(([keyA], [keyB]) => keyA.localeCompare(keyB)));
+          
+          const compare = (arr1, arr2) => {
+            if (arr1.length !== arr2.length) return false;
+          
+            const sortedArr1 = arr1.map(normalizeObject).sort((a, b) => JSON.stringify(a).localeCompare(JSON.stringify(b)));
+            const sortedArr2 = arr2.map(normalizeObject).sort((a, b) => JSON.stringify(a).localeCompare(JSON.stringify(b)));
+          
+            return JSON.stringify(sortedArr1) === JSON.stringify(sortedArr2);
+          };
+          const runOutput = fs.readFileSync(runOutputFile, {
+            encoding: 'utf-8'
+          });
+          const expectedOutput = fs.readFileSync(expectedOutputFile, {
+            encoding: 'utf-8'
+          });
+          score = compare(JSON.parse(runOutput), JSON.parse(expectedOutput)) ? 100 : 0;
+          break;
+        }
+        default: {
+          const diff = exec(`
+            diff -b -B -a --suppress-common-lines --speed-large-files ${runOutputFile} ${expectedOutputFile}
+          `);
+          score = diff.code === 0 ? 100 : 0;
+          break;
+        }
+      }
 
       let result = new Array(
         +code === 143 && "TLE",
