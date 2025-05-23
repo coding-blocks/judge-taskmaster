@@ -1,0 +1,17 @@
+FROM docker:20.10-dind
+
+# Install Node and other dependencies on top of Docker base image
+RUN apk add --no-cache nodejs npm build-base diffutils git bash rsync
+
+WORKDIR /usr/src/judge-taskmaster
+
+COPY package.json .
+COPY package-lock.json .
+
+RUN npm install -D
+
+COPY . .
+
+ENV DOCKER_HOST=unix:///var/run/docker.sock
+
+CMD ["sh", "-c", "dockerd-entrypoint.sh & sleep 5 && until docker info; do sleep 1; done && npm start"]
