@@ -14,4 +14,4 @@ COPY . .
 
 ENV DOCKER_HOST=unix:///var/run/docker.sock
 
-CMD ["sh", "-c", "dockerd-entrypoint.sh & sleep 5 && until docker info; do sleep 1; done && npm start"]
+CMD ["sh", "-c", "dockerd-entrypoint.sh & sleep 10 && until docker info; do sleep 2; done && npm start"]
